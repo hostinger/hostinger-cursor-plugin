@@ -1,0 +1,36 @@
+---
+description: Use Hostinger's framework presets when generating deployment configs for Node.js apps
+alwaysApply: false
+---
+
+# Use Hostinger framework presets
+
+When generating a deployment config or guiding a `deploy-nodejs-app` flow, **detect the framework first and pick the matching Hostinger preset**. Do not default to "generic Node" if a specific preset exists — presets bake in correct build commands, output dirs, and runtime expectations.
+
+## Recognized presets
+
+| Framework | Detect by | Preset name | Default build / start |
+|---|---|---|---|
+| **SvelteKit** | `@sveltejs/kit` in `dependencies` | `sveltekit` | `npm run build` → `node build` |
+| **Hono** | `hono` in `dependencies` | `hono` | `npm run build` (if present) → `node dist/index.js` |
+| **Remix** | `@remix-run/*` in `dependencies` | `remix` | `npm run build` → `npm start` (`remix-serve`) |
+| **Fastify** | `fastify` in `dependencies`, no Remix/Hono | `fastify` | `npm run build` (optional) → `node server.js` |
+| **Astro** | `astro` in `dependencies` | `astro` | `npm run build` → `node ./dist/server/entry.mjs` (SSR) or static |
+| **Next.js** | `next` in `dependencies` | `nextjs` | `npm run build` → `npm start` |
+| **Express / generic Node** | none of the above | `nodejs` | `npm start` |
+
+## Picking the preset
+
+1. Read `package.json` first.
+2. If multiple framework deps are present (unusual), ask the user which is the primary runtime.
+3. If `package.json` is unavailable, ask the user to name the framework rather than guessing.
+
+## When the preset doesn't fit
+
+- If the user has a custom build command that doesn't match the preset's defaults, override `build` and `start` in the deployment config but keep the preset (so static / SSR routing still works).
+- If no preset fits, fall back to `nodejs` and explicitly call out that no specific preset was used.
+
+## Do not
+
+- Do not silently fall back to `nodejs` when a more specific preset applies — the build cache and runtime config will be wrong.
+- Do not invent preset names — only use the ones in the table above.

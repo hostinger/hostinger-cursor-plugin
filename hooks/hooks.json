@@ -1,0 +1,10 @@
+{
+  "hooks": [
+    {
+      "name": "block-hostinger-token-commit",
+      "trigger": "pre-commit",
+      "description": "Block committing files that look like a leaked Hostinger API token.",
+      "script": "scripts/check-no-token-leak.sh"
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "name": "hostinger-connector",
+  "displayName": "Hostinger Connector",
+  "version": "0.1.0",
+  "description": "MCP plugin to deploy and manage Hostinger hosting, Node.js apps, deployments, and DNS from inside Cursor.",
+  "author": "Hostinger",
+  "license": "MIT",
+  "homepage": "https://hostinger.com/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hostinger/api-mcp-server"
+  },
+  "keywords": [
+    "hosting",
+    "nodejs",
+    "deployment",
+    "mcp",
+    "hostinger",
+    "dns",
+    "wordpress"
+  ],
+  "logo": "assets/logo.svg"
+}

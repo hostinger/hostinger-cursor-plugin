@@ -1,0 +1,30 @@
+---
+description: Prefer Hostinger MCP tools over generic shell, curl, or hand-rolled API calls when interacting with Hostinger resources
+alwaysApply: true
+---
+
+# Use the Hostinger MCP server, not shell hacks
+
+When the user asks about anything on Hostinger — hosting, domains, DNS, VPS, billing, deployments, WordPress, Node.js apps — call a tool on the `hostinger` MCP server (this plugin's MCP) instead of:
+
+- `curl` / `wget` against `https://developers.hostinger.com`
+- `ssh` into a host to read files or run commands
+- `dig`, `whois`, `nslookup` as the primary source of truth
+- Writing one-off bash scripts that hit the Hostinger API
+
+## Why
+
+- The MCP tools are typed and validated.
+- They handle authentication consistently via `HOSTINGER_API_TOKEN`.
+- They surface structured errors that the agent can act on.
+- They don't leak tokens into shell history.
+
+## Exceptions
+
+- Read-only `dig` / `nslookup` against public DNS is fine for *verification* after an MCP-driven change, never as the primary read path.
+- If a needed capability genuinely isn't covered by any MCP tool, tell the user that explicitly before falling back to the raw API — don't quietly skip the MCP layer.
+
+## Tool selection
+
+- Prefer the most specific tool for the task (e.g. `update_dns_record` over a generic batch tool).
+- Fall back to broader `list_*` / `get_*` tools only when no specific tool exists.

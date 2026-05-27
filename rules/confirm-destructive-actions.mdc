@@ -1,0 +1,33 @@
+---
+description: Always confirm destructive Hostinger actions with the user before executing the MCP tool call
+alwaysApply: true
+---
+
+# Confirm destructive Hostinger actions before executing
+
+Before invoking any Hostinger MCP tool that **mutates or destroys** state, show the user the exact change and wait for an explicit "yes" / "go" / equivalent confirmation in the same turn.
+
+## Always confirm
+
+- **Domains**: `delete_domain`, `transfer_domain`, `unlock_domain`, changing forwarding, changing nameservers.
+- **DNS**: `delete_dns_record`, bulk record replacements, NS changes, apex A/AAAA changes, MX record replacement.
+- **Hosting**: `delete_website`, `restore_backup`, `update_php_version`, `disable_wordpress_plugin` on production, plan downgrades.
+- **VPS**: `restart_vps`, `stop_vps`, `reinstall_os`, firewall rule deletions, snapshot deletions.
+- **Databases**: `drop_database`, `delete_database_user`, restoring a DB backup (overwrites current).
+- **Deployments**: redeploying production, rolling back, deleting a deployment.
+- **Billing**: cancelling a subscription, disabling auto-renewal on an active service.
+
+## Confirmation format
+
+Reply with:
+
+1. **Action** — one sentence ("I'm about to delete the `mail` A record on `example.com`.").
+2. **Impact** — one or two sentences on what breaks if this is wrong.
+3. **Recovery** — how to undo, if it's reversible (e.g. DNS snapshot ID, backup file, etc.).
+4. End with a clear question: "Proceed? (yes / no)".
+
+Do not chain destructive operations — confirm each one separately, even if the user already approved a related action earlier in the conversation.
+
+## Read-only is safe
+
+`list_*`, `get_*`, `describe_*`, `check_*` tools never need confirmation.
