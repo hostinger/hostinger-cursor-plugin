@@ -1,0 +1,58 @@
+---
+description: Pick the right Hostinger deployment tool and build overrides when shipping Node.js or static sites
+alwaysApply: false
+---
+
+# Deploying to Hostinger
+
+Hostinger deploys from an **uploaded archive**, and the build runs server-side. There is no framework "preset" parameter — build settings are auto-detected from `package.json`, and you may override individual fields. Pick the tool that matches the job.
+
+## Which tool
+
+| Situation | Tool |
+|---|---|
+| Node.js / JS app, let Hostinger auto-detect everything | `hosting_deployJsApplication` |
+| Node.js app where you must override Node version, entry file, build script, or output dir | `hosting_createNodeJSBuildFromArchiveV1` |
+| Pre-built static files, no build step at all | `hosting_deployStaticWebsite` |
+
+`hosting_deployJsApplication` is the default choice — it takes just `domain` and `archivePath` and resolves the hosting username itself. Reach for `hosting_createNodeJSBuildFromArchiveV1` only when an override is actually needed; it additionally requires `username`, which you can get from `hosting_listWebsitesV1`.
+
+Do not use `hosting_deployStaticWebsite` for anything with a `package.json` or a build command — it extracts the archive verbatim and serves it, with no install or build step.
+
+## Building the archive
+
+Applies to all three tools:
+
+- Include **source only**. Exclude `node_modules/` and build output (`dist/`, `build/`, `.next/`, `.svelte-kit/`, `.output/`) — the server runs the install and build itself, and shipping them just bloats the upload.
+- Also exclude anything matched by `.gitignore` when that file exists.
+- Never include `.env` or any file holding credentials.
+- Supported formats: `zip`, `tar`, `tar.gz`, `tgz`, `7z`, `gz`. `hosting_createNodeJSBuildFromArchiveV1` accepts `.zip`, `.tar.gz`, `.tgz` only, and caps the archive at **50 MB**.
+- For `hosting_deployStaticWebsite`, name the archive exactly `<directoryname>_YYYYMMDD_HHMMSS.zip` (e.g. `mystaticwebsite_20260806_143022.zip`).
+
+```bash
+zip -r myapp.zip . --exclude "node_modules/*" --exclude "dist/*" --exclude ".git/*" --exclude ".env"
+```
+
+## Valid override values
+
+Only these values are accepted — do not invent others.
+
+- `node_version`: `18`, `20`, `22`, `24`. Omit to auto-detect from `engines.node`.
+- `app_type`: `create-react-app`, `vite`, `angular`, `react`, `vue`, `parcel`, `express`, `fastify`, `nest`. Omit to auto-detect.
+- `package_manager`: `npm`, `yarn`, `pnpm`. Omit to auto-detect from the lockfile.
+- `root_directory` — where `package.json` lives, relative to `public_html`. Needed for monorepos.
+- `output_directory` — build output, relative to the root directory.
+- `build_script`, `entry_file` — free-form string overrides.
+
+If the project's framework isn't in the `app_type` list (SvelteKit, Remix, Astro, Hono, Nuxt, and so on), **omit `app_type` entirely** and let auto-detection handle it, overriding `build_script`, `entry_file`, and `output_directory` if the detected values are wrong. Do not force an unrelated `app_type` value as a stand-in.
+
+## After submitting
+
+1. `hosting_listJsDeployments` (or `hosting_listNodeJSBuildsV1`) to get the build `uuid` and state — `pending`, `running`, `completed`, or `failed`.
+2. Poll logs while the state is `running`: `hosting_showJsDeploymentLogs` for `deployJsApplication` builds, or `hosting_getNodeJSBuildLogsV1` for archive builds. Pass the previously returned line count as `fromLine` / `from_line` so you only fetch new output.
+3. On `failed`, hand off to the `diagnose-build-failure` skill.
+
+## Runtime expectations
+
+- The app must bind to `process.env.PORT`. A hardcoded port will not receive traffic.
+- Node.js application environment variables cannot be set through the API. If the app needs them, tell the user to add them in hPanel before the first request — don't pretend an MCP tool can do it.

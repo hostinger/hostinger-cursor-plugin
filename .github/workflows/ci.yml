@@ -1,0 +1,63 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main, master]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Validate plugin manifest and component frontmatter
+        run: node scripts/validate-template.mjs
+
+      - name: Check every referenced MCP tool exists
+        run: node scripts/check-tool-names.mjs
+
+      - name: Check JSON files parse
+        run: |
+          for f in mcp.json hooks/hooks.json .cursor-plugin/plugin.json scripts/mcp-tools.json; do
+            node --input-type=module -e "
+              import { readFileSync } from 'node:fs';
+              JSON.parse(readFileSync('$f', 'utf8'));
+              console.log('ok  $f');
+            "
+          done
+
+      - name: Lint hook script
+        run: shellcheck scripts/check-no-token-leak.sh
+
+      - name: Check hook script is executable
+        run: test -x scripts/check-no-token-leak.sh
+
+  # The MCP server ships new tools regularly. This is advisory: it tells us the
+  # checked-in catalog has fallen behind, without failing PRs that didn't cause it.
+  catalog-drift:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Regenerate the catalog from the latest published server
+        run: node scripts/sync-mcp-tools.mjs
+
+      - name: Report drift
+        run: |
+          if git diff --quiet -- scripts/mcp-tools.json; then
+            echo "Catalog is up to date with hostinger-api-mcp@latest."
+          else
+            echo "::warning::scripts/mcp-tools.json is behind hostinger-api-mcp@latest."
+            echo "Run 'node scripts/sync-mcp-tools.mjs' and commit the result."
+            git --no-pager diff --stat -- scripts/mcp-tools.json
+          fi

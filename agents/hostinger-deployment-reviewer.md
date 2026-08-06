@@ -7,33 +7,37 @@ description: Pre-flight review of a planned Hostinger deployment. Reads the proj
 
 ## When to invoke
 
-- Before calling `create_nodejs_deployment` for a non-trivial deploy.
+- Before calling `hosting_deployJsApplication` or `hosting_createNodeJSBuildFromArchiveV1` for a non-trivial deploy.
 - When the user asks "is this ready to ship to Hostinger?".
 - After a build failure, before retrying.
 
 ## What to check
 
-1. **Framework preset** — does the detected framework match a Hostinger preset (see `rules/framework-presets.mdc`)?
-2. **Node version** — does `engines.node` in `package.json` match a Hostinger-supported runtime?
-3. **Start command** — does the `start` script bind to `process.env.PORT`? Hardcoded ports break on Hostinger.
-4. **Env vars** — does the code reference any `process.env.X` that isn't set on the deployment? List the missing ones.
-5. **Secrets** — is `.env` accidentally being uploaded? Is anything that looks like a token committed in source?
-6. **Static assets** — are `dist/` / `build/` paths consistent between the build output and the preset's expected output dir?
-7. **Domain state** — does the target domain resolve to Hostinger? Is SSL provisioned?
-8. **Memory / size** — is the bundled output near the plan's size limit?
+1. **Deploy tool** — is the right one selected? Anything with a `package.json` and a build script needs `hosting_deployJsApplication` or `hosting_createNodeJSBuildFromArchiveV1`, never `hosting_deployStaticWebsite`.
+2. **Node version** — does `engines.node` resolve to `18`, `20`, `22`, or `24`? Anything else needs an explicit `node_version` override.
+3. **Overrides** — if `app_type` is being set, is the value in the accepted enum (`create-react-app`, `vite`, `angular`, `react`, `vue`, `parcel`, `express`, `fastify`, `nest`)? For any other framework, `app_type` must be omitted and auto-detection allowed to run.
+4. **Output directory** — does the build's real output path match `output_directory`? A mismatch builds cleanly and then serves a 404.
+5. **Root directory** — in a monorepo, does `root_directory` point at the folder holding `package.json`?
+6. **Package manager** — does the committed lockfile match `package_manager`?
+7. **Start command / PORT** — does the entry point bind to `process.env.PORT`? A hardcoded port receives no traffic.
+8. **Env vars** — list every `process.env.X` the code reads. These cannot be set through the API, so flag them for the user to add in hPanel before the first request.
+9. **Archive hygiene** — is `node_modules/`, build output, `.git/`, and `.env` excluded? Is the archive under 50 MB?
+10. **Secrets** — is anything that looks like a token committed in source?
+11. **Domain state** — does `hosting_listWebsitesV1` show the target domain, and does `DNS_getDNSRecordsV1` point it at Hostinger?
 
 ## Output
 
 Reply with a checklist:
 
 ```
-- [x] Framework preset: <preset>
-- [x] Node version: <version> (supported)
+- [x] Deploy tool: hosting_deployJsApplication (build required)
+- [x] Node version: 22 (supported)
+- [x] app_type: omitted — SvelteKit isn't in the enum, auto-detect will run
 - [ ] PORT: hardcoded in server.js:42 — change to process.env.PORT
-- [ ] Env vars: missing DATABASE_URL, STRIPE_SECRET_KEY
+- [ ] Env vars: DATABASE_URL, STRIPE_SECRET_KEY must be set in hPanel (not settable via API)
+- [x] Archive: node_modules, dist, .git, .env excluded — 3.1 MB
 - [x] Secrets: clean
-- [x] Build output: ./dist matches preset
-- [x] Domain: example.com points to Hostinger, SSL active
+- [x] Domain: example.com listed, apex A record points to Hostinger
 ```
 
 End with a one-line verdict: "Ready to deploy" or "Block: <N> issues to fix first".
@@ -42,3 +46,4 @@ End with a one-line verdict: "Ready to deploy" or "Block: <N> issues to fix firs
 
 - Do not actually deploy — this agent only reviews.
 - Do not modify files without user confirmation.
+- Do not recommend a "framework preset" — Hostinger has no preset parameter. Recommend specific overrides instead.

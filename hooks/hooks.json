@@ -1,10 +1,13 @@
 {
-  "hooks": [
-    {
-      "name": "block-hostinger-token-commit",
-      "trigger": "pre-commit",
-      "description": "Block committing files that look like a leaked Hostinger API token.",
-      "script": "scripts/check-no-token-leak.sh"
-    }
-  ]
+  "version": 1,
+  "hooks": {
+    "beforeShellExecution": [
+      {
+        "command": "scripts/check-no-token-leak.sh",
+        "matcher": "git\\s.*commit",
+        "timeout": 10,
+        "failClosed": false
+      }
+    ]
+  }
 }

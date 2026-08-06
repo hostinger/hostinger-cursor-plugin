@@ -9,13 +9,53 @@ Before invoking any Hostinger MCP tool that **mutates or destroys** state, show 
 
 ## Always confirm
 
-- **Domains**: `delete_domain`, `transfer_domain`, `unlock_domain`, changing forwarding, changing nameservers.
-- **DNS**: `delete_dns_record`, bulk record replacements, NS changes, apex A/AAAA changes, MX record replacement.
-- **Hosting**: `delete_website`, `restore_backup`, `update_php_version`, `disable_wordpress_plugin` on production, plan downgrades.
-- **VPS**: `restart_vps`, `stop_vps`, `reinstall_os`, firewall rule deletions, snapshot deletions.
-- **Databases**: `drop_database`, `delete_database_user`, restoring a DB backup (overwrites current).
-- **Deployments**: redeploying production, rolling back, deleting a deployment.
-- **Billing**: cancelling a subscription, disabling auto-renewal on an active service.
+**Websites & hosting**
+
+- `hosting_deleteWebsiteV1`, `hosting_deleteWebsiteSubdomainV1`, `hosting_deleteWebsiteParkedDomainV1`
+- `hosting_deployJsApplication`, `hosting_deployStaticWebsite`, `hosting_createNodeJSBuildFromArchiveV1` — these overwrite what is currently live
+- `hosting_restartNode_jsApplicationV1`, `hosting_patchNode_jsVulnerabilitiesV1`
+- `hosting_updatePHPVersionV1`, `hosting_updatePHPOptionsV1`, `hosting_updatePHPExtensionsV1`, `hosting_resetPHPExtensionsV1`
+- `hosting_deleteAccountDatabaseV1`, `hosting_changeDatabasePasswordV1`, `hosting_repairDatabaseV1`, `hosting_deleteDatabaseRemoteConnectionV1`
+- `hosting_deleteAccountCronJobV1`
+
+**WordPress**
+
+- `hosting_deleteWordPressInstallationV1`, `hosting_updateWordPressCoreV1`
+- `hosting_uninstallWordPressPluginsV1`, `hosting_deactivateWordPressPluginV1`, `hosting_updateWordPressPluginsV1`
+- `hosting_uninstallWordPressThemesV1`, `hosting_activateWordPressThemeV1`, `hosting_updateWordPressThemesV1`
+- `hosting_toggleMaintenanceModeV1` on a production site
+
+**Domains**
+
+- `domains_purchaseNewDomainV1` (spends money), `domains_disableDomainLockV1`, `domains_updateDomainNameserversV1`
+- `domains_createDomainForwardingV1`, `domains_updateDomainForwardingV1`, `domains_deleteDomainForwardingV1`
+- `domains_startOutgoingDomainMoveV1`, `domains_acceptIncomingDomainMoveV1`, `domains_rejectIncomingDomainMoveV1`
+- `domains_deleteWHOISProfileV1`, `domains_disablePrivacyProtectionV1`
+
+**DNS**
+
+- `DNS_updateDNSRecordsV1` — always, and especially with `overwrite: true`, which replaces matching records
+- `DNS_deleteDNSRecordsV1`, `DNS_resetDNSRecordsV1` (resets the whole zone to defaults), `DNS_restoreDNSSnapshotV1`
+- Any change to apex `A`/`AAAA`, `NS`, or `MX` records — these break live traffic or mail delivery
+
+**VPS**
+
+- `VPS_stopVirtualMachineV1`, `VPS_restartVirtualMachineV1`, `VPS_recreateVirtualMachineV1` (destroys all data), `VPS_purchaseNewVirtualMachineV1`
+- `VPS_restoreSnapshotV1`, `VPS_deleteSnapshotV1`, `VPS_restoreBackupV1`
+- `VPS_setRootPasswordV1`, `VPS_setPanelPasswordV1`, `VPS_deletePublicKeyV1`
+- `VPS_deleteFirewallV1`, `VPS_deleteFirewallRuleV1`, `VPS_deactivateFirewallV1`, `VPS_syncFirewallV1`
+- `VPS_deleteProjectV1`, `VPS_stopProjectV1`, `VPS_restartProjectV1`
+- `VPS_startRecoveryModeV1`, `VPS_deletePTRRecordV1`, `VPS_uninstallMonarxV1`
+
+**Subscriptions & payments**
+
+- `billing_createPurchaseOrderV1`, `billing_renewSubscriptionV1` (both spend money)
+- `billing_disableAutoRenewalV1` on an active service, `billing_deletePaymentMethodV1`
+
+**Ecommerce & email marketing**
+
+- `ecommerce_deleteStoreV1`, `ecommerce_updateSalesChannelV1`, `ecommerce_setStoreShippingV1`
+- `reach_deleteAContactV1`
 
 ## Confirmation format
 
@@ -23,11 +63,11 @@ Reply with:
 
 1. **Action** — one sentence ("I'm about to delete the `mail` A record on `example.com`.").
 2. **Impact** — one or two sentences on what breaks if this is wrong.
-3. **Recovery** — how to undo, if it's reversible (e.g. DNS snapshot ID, backup file, etc.).
+3. **Recovery** — how to undo, if it's reversible (e.g. the DNS snapshot ID from `DNS_getDNSSnapshotListV1`, a VPS snapshot ID, etc.).
 4. End with a clear question: "Proceed? (yes / no)".
 
 Do not chain destructive operations — confirm each one separately, even if the user already approved a related action earlier in the conversation.
 
 ## Read-only is safe
 
-`list_*`, `get_*`, `describe_*`, `check_*` tools never need confirmation.
+Tools whose names read as `list*`, `get*`, `show*`, `check*`, or `validate*` never need confirmation. `DNS_validateDNSRecordsV1` is safe by design — it is the dry run for `DNS_updateDNSRecordsV1`, so prefer calling it first rather than asking the user to approve an unvalidated change.
