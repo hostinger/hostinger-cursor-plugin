@@ -5,7 +5,7 @@ alwaysApply: true
 
 # Use the Hostinger MCP servers, not shell hacks
 
-When the user asks about anything on Hostinger — websites, WordPress, domains, DNS, VPS, subscriptions, email marketing, ecommerce — call a tool on one of this plugin's Hostinger MCP servers instead of:
+When the user asks about anything on Hostinger — websites, WordPress, Agency Plan sites, domains, DNS, VPS, subscriptions, email marketing, ecommerce — use one of this plugin's Hostinger MCP servers instead of:
 
 - `curl` / `wget` against `https://developers.hostinger.com`
 - `ssh` into a host to read files or run commands
@@ -14,42 +14,45 @@ When the user asks about anything on Hostinger — websites, WordPress, domains,
 
 ## Why
 
-- The MCP tools are typed and validated against Hostinger's OpenAPI spec.
+- The operations are typed and validated against Hostinger's OpenAPI spec.
 - They handle authentication consistently (OAuth by default, `HOSTINGER_API_TOKEN` when set).
 - They surface structured errors that the agent can act on.
 - They don't leak tokens into shell history.
 
-## Which server to use
+## How the servers work
 
-The plugin registers one MCP server per product area. Tool names are prefixed by area, so the prefix tells you which server owns the call:
+Every server exposes the same three tools: `search` finds operations by keyword and returns each one's name, `readOnly` / `destructive` hints and `inputSchema`; `execute` runs one operation; `multi-execute` runs up to 20 in order, passing values between steps as `$steps.<i>.<path>`. The `inputSchema` from `search` is authoritative — read it before the first call of an operation.
 
-| Server | Tool prefix | Covers |
+The plugin registers one server per product area. The operation prefix tells you which server owns it, and a `multi-execute` batch can only chain operations from one server:
+
+| Server | Operation prefix | Covers |
 |---|---|---|
-| `hostinger-hosting` | `hosting_` | Websites, Node.js builds & deployments, databases, cron, PHP, subdomains |
-| `hostinger-wordpress` | `hosting_` | WordPress installations, plugins, themes, core, LiteSpeed cache, maintenance mode |
+| `hostinger-hosting` | `hosting_` | Shared and Cloud websites, Node.js builds and deployments, databases, cron, PHP, SSL, files, Git |
+| `hostinger-wordpress` | `wordpress_` | WordPress installations, plugins, themes, core, LiteSpeed cache, maintenance mode |
+| `hostinger-agency-hosting` | `agency-hosting_` | Agency Plan websites, deploys, databases, SSL, PHP, metrics |
 | `hostinger-domains` | `domains_` | Availability, registration, transfers, locks, forwarding, WHOIS |
-| `hostinger-dns` | `DNS_` | Zone records, snapshots, validation |
+| `hostinger-dns` | `dns_` | Zone records, snapshots, validation |
 | `hostinger-billing` | `billing_` | Subscriptions, auto-renewal, payment methods, catalog, orders |
 | `hostinger-reach` | `reach_` | Contacts, segments, email marketing profiles |
 | `hostinger-ecommerce` | `ecommerce_` | Stores, products, sales channels, shipping |
-| `hostinger-vps` | `VPS_` | Virtual machines, firewalls, snapshots, backups, SSH keys, metrics |
+| `hostinger-vps` | `vps_` | Virtual machines, firewalls, snapshots, backups, SSH keys, metrics |
 
-Note that WordPress tools also use the `hosting_` prefix — they live on a separate server but share the namespace.
+## Operation selection
 
-## Tool selection
-
-- Discover before you guess. Tool names follow Hostinger's OpenAPI operation IDs — `hosting_listWebsitesV1`, `DNS_getDNSRecordsV1`, `billing_getSubscriptionListV1` — not generic verbs of the *list_websites* or *create_deployment* shape. If you are unsure of an exact name, list the server's tools rather than inventing one.
-- Several Hostinger endpoints are deliberately **batch-oriented**. Do not look for a per-item tool that does not exist — for example DNS has no single-record create/update tool; `DNS_updateDNSRecordsV1` takes a whole zone array and an `overwrite` flag.
-- Read before you write: pair a `get`/`list`/`show` call with every mutation so you can report the before/after state.
+- Search before you guess. Names follow the API: `hosting_websites_list`, `dns_records_list`, `billing_subscriptions_list`. If `search` returns nothing useful, try other words for what the step does rather than inventing a name.
+- Several endpoints are **batch-oriented**. DNS has no single-record create call: `dns_records_update` takes a zone array, and its `overwrite` flag defaults to `true`, which replaces every record with the same name and type.
+- Read before you write: pair a read with every change so you can report the before and after state.
+- For multi-step web hosting work — troubleshooting a site, connecting a domain, deploying, WordPress maintenance, an account audit, a migration — follow the matching skill in this plugin.
 
 ## Not covered by the API
 
-Some things users ask for have no MCP tool. Say so plainly instead of substituting a plausible-sounding call:
+Say so plainly instead of substituting a plausible-sounding call:
 
-- Raw HTTP access logs and PHP error logs are not exposed by the API — point the user to hPanel. Build and deployment logs *are* available (see the `query-deployment-logs` skill).
-- Node.js application environment variables cannot be managed through the API; they are set in hPanel.
+- HTTP access logs and PHP error logs — hPanel only. Build, runtime (Node.js) and cron output are available.
+- Backups and restores for Shared, Cloud and Agency websites — hPanel only.
+- CPU and memory usage for Shared and Cloud plans — hPanel only; Agency Plan orders do have metrics.
 
 ## Exceptions
 
-- Read-only `dig` / `nslookup` against public DNS is fine for *verification* after an MCP-driven change, never as the primary read path.
-- If a needed capability genuinely isn't covered by any MCP tool, tell the user explicitly before falling back to the raw API — don't quietly skip the MCP layer.
+- Read-only `dig` / `nslookup` / `curl` against the public site is fine for *verification* after an MCP-driven change, never as the primary read path.
+- If a needed capability genuinely isn't covered by any operation, tell the user explicitly before falling back to the raw API — don't quietly skip the MCP layer.

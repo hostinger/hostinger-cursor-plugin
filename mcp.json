@@ -3,42 +3,47 @@
     "hostinger-hosting": {
       "command": "npx",
       "args": ["--yes", "--package=hostinger-api-mcp@latest", "hostinger-hosting-mcp"],
-      "env": { "USER_AGENT": "plugin;cursor;0.2.0" }
+      "env": { "USER_AGENT": "plugin;cursor;0.3.0" }
     },
     "hostinger-wordpress": {
       "command": "npx",
       "args": ["--yes", "--package=hostinger-api-mcp@latest", "hostinger-wordpress-mcp"],
-      "env": { "USER_AGENT": "plugin;cursor;0.2.0" }
+      "env": { "USER_AGENT": "plugin;cursor;0.3.0" }
+    },
+    "hostinger-agency-hosting": {
+      "command": "npx",
+      "args": ["--yes", "--package=hostinger-api-mcp@latest", "hostinger-agency-hosting-mcp"],
+      "env": { "USER_AGENT": "plugin;cursor;0.3.0" }
     },
     "hostinger-domains": {
       "command": "npx",
       "args": ["--yes", "--package=hostinger-api-mcp@latest", "hostinger-domains-mcp"],
-      "env": { "USER_AGENT": "plugin;cursor;0.2.0" }
+      "env": { "USER_AGENT": "plugin;cursor;0.3.0" }
     },
     "hostinger-dns": {
       "command": "npx",
       "args": ["--yes", "--package=hostinger-api-mcp@latest", "hostinger-dns-mcp"],
-      "env": { "USER_AGENT": "plugin;cursor;0.2.0" }
+      "env": { "USER_AGENT": "plugin;cursor;0.3.0" }
     },
     "hostinger-billing": {
       "command": "npx",
       "args": ["--yes", "--package=hostinger-api-mcp@latest", "hostinger-billing-mcp"],
-      "env": { "USER_AGENT": "plugin;cursor;0.2.0" }
+      "env": { "USER_AGENT": "plugin;cursor;0.3.0" }
     },
     "hostinger-reach": {
       "command": "npx",
       "args": ["--yes", "--package=hostinger-api-mcp@latest", "hostinger-reach-mcp"],
-      "env": { "USER_AGENT": "plugin;cursor;0.2.0" }
+      "env": { "USER_AGENT": "plugin;cursor;0.3.0" }
     },
     "hostinger-ecommerce": {
       "command": "npx",
       "args": ["--yes", "--package=hostinger-api-mcp@latest", "hostinger-ecommerce-mcp"],
-      "env": { "USER_AGENT": "plugin;cursor;0.2.0" }
+      "env": { "USER_AGENT": "plugin;cursor;0.3.0" }
     },
     "hostinger-vps": {
       "command": "npx",
       "args": ["--yes", "--package=hostinger-api-mcp@latest", "hostinger-vps-mcp"],
-      "env": { "USER_AGENT": "plugin;cursor;0.2.0" }
+      "env": { "USER_AGENT": "plugin;cursor;0.3.0" }
     }
   }
 }

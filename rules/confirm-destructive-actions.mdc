@@ -5,57 +5,19 @@ alwaysApply: true
 
 # Confirm destructive Hostinger actions before executing
 
-Before invoking any Hostinger MCP tool that **mutates or destroys** state, show the user the exact change and wait for an explicit "yes" / "go" / equivalent confirmation in the same turn.
+Before running any Hostinger operation that **mutates or destroys** state, show the user the exact change and wait for an explicit "yes" / "go" / equivalent confirmation in the same turn.
 
-## Always confirm
+## What needs confirmation
 
-**Websites & hosting**
+Every operation that `search` reports with `destructive: true`, every operation that spends money, and every write the user did not ask for by name. `readOnly: true` operations never need confirmation.
 
-- `hosting_deleteWebsiteV1`, `hosting_deleteWebsiteSubdomainV1`, `hosting_deleteWebsiteParkedDomainV1`
-- `hosting_deployJsApplication`, `hosting_deployStaticWebsite`, `hosting_createNodeJSBuildFromArchiveV1` — these overwrite what is currently live
-- `hosting_restartNode_jsApplicationV1`, `hosting_patchNode_jsVulnerabilitiesV1`
-- `hosting_updatePHPVersionV1`, `hosting_updatePHPOptionsV1`, `hosting_updatePHPExtensionsV1`, `hosting_resetPHPExtensionsV1`
-- `hosting_deleteAccountDatabaseV1`, `hosting_changeDatabasePasswordV1`, `hosting_repairDatabaseV1`, `hosting_deleteDatabaseRemoteConnectionV1`
-- `hosting_deleteAccountCronJobV1`
+The ones that do the most damage when wrong — confirm these even inside a flow the user already approved:
 
-**WordPress**
-
-- `hosting_deleteWordPressInstallationV1`, `hosting_updateWordPressCoreV1`
-- `hosting_uninstallWordPressPluginsV1`, `hosting_deactivateWordPressPluginV1`, `hosting_updateWordPressPluginsV1`
-- `hosting_uninstallWordPressThemesV1`, `hosting_activateWordPressThemeV1`, `hosting_updateWordPressThemesV1`
-- `hosting_toggleMaintenanceModeV1` on a production site
-
-**Domains**
-
-- `domains_purchaseNewDomainV1` (spends money), `domains_disableDomainLockV1`, `domains_updateDomainNameserversV1`
-- `domains_createDomainForwardingV1`, `domains_updateDomainForwardingV1`, `domains_deleteDomainForwardingV1`
-- `domains_startOutgoingDomainMoveV1`, `domains_acceptIncomingDomainMoveV1`, `domains_rejectIncomingDomainMoveV1`
-- `domains_deleteWHOISProfileV1`, `domains_disablePrivacyProtectionV1`
-
-**DNS**
-
-- `DNS_updateDNSRecordsV1` — always, and especially with `overwrite: true`, which replaces matching records
-- `DNS_deleteDNSRecordsV1`, `DNS_resetDNSRecordsV1` (resets the whole zone to defaults), `DNS_restoreDNSSnapshotV1`
-- Any change to apex `A`/`AAAA`, `NS`, or `MX` records — these break live traffic or mail delivery
-
-**VPS**
-
-- `VPS_stopVirtualMachineV1`, `VPS_restartVirtualMachineV1`, `VPS_recreateVirtualMachineV1` (destroys all data), `VPS_purchaseNewVirtualMachineV1`
-- `VPS_restoreSnapshotV1`, `VPS_deleteSnapshotV1`, `VPS_restoreBackupV1`
-- `VPS_setRootPasswordV1`, `VPS_setPanelPasswordV1`, `VPS_deletePublicKeyV1`
-- `VPS_deleteFirewallV1`, `VPS_deleteFirewallRuleV1`, `VPS_deactivateFirewallV1`, `VPS_syncFirewallV1`
-- `VPS_deleteProjectV1`, `VPS_stopProjectV1`, `VPS_restartProjectV1`
-- `VPS_startRecoveryModeV1`, `VPS_deletePTRRecordV1`, `VPS_uninstallMonarxV1`
-
-**Subscriptions & payments**
-
-- `billing_createPurchaseOrderV1`, `billing_renewSubscriptionV1` (both spend money)
-- `billing_disableAutoRenewalV1` on an active service, `billing_deletePaymentMethodV1`
-
-**Ecommerce & email marketing**
-
-- `ecommerce_deleteStoreV1`, `ecommerce_updateSalesChannelV1`, `ecommerce_setStoreShippingV1`
-- `reach_deleteAContactV1`
+- **Spends money:** `domains_portfolio_purchase`, `vps_virtual-machines_purchase`, `billing_orders_create-purchase`, `billing_subscriptions_renew`.
+- **Deletes data for good:** `hosting_websites_delete`, `agency-hosting_websites_delete`, `hosting_databases_delete`, `agency-hosting_databases_delete-website`, `wordpress_installations_delete`, `vps_virtual-machines_recreate`.
+- **Overwrites what is live:** `hosting_deploy-static-website`, `hosting_deploy-js-application`, `hosting_websites_deploy-static-site-archive`, `hosting_nodejs_start-build`, `hosting_import-wordpress-website`, `wordpress_installations_import-website`, `agency-hosting_deploy-php-application`, `agency-hosting_deploy-node-static-website`, `vps_snapshots_restore`, `vps_backups_restore`.
+- **Replaces a whole set:** `hosting_nodejs_replace-environment-variables` (every variable not sent is deleted), `agency-hosting_php_replace-website-options`, `agency-hosting_php_replace-website-extensions`.
+- **Breaks traffic or mail:** `dns_records_update` (its `overwrite` defaults to `true`), `dns_records_delete`, `dns_records_reset`, `dns_snapshots_restore`, `domains_portfolio_update-nameservers`, `agency-hosting_domains_change-website`, and any change to apex `A`/`AAAA`, `NS` or `MX` records.
 
 ## Confirmation format
 
@@ -63,11 +25,11 @@ Reply with:
 
 1. **Action** — one sentence ("I'm about to delete the `mail` A record on `example.com`.").
 2. **Impact** — one or two sentences on what breaks if this is wrong.
-3. **Recovery** — how to undo, if it's reversible (e.g. the DNS snapshot ID from `DNS_getDNSSnapshotListV1`, a VPS snapshot ID, etc.).
+3. **Recovery** — how to undo, if it's reversible (e.g. the newest DNS snapshot ID from `dns_snapshots_list`, or a VPS snapshot).
 4. End with a clear question: "Proceed? (yes / no)".
 
 Do not chain destructive operations — confirm each one separately, even if the user already approved a related action earlier in the conversation.
 
 ## Read-only is safe
 
-Tools whose names read as `list*`, `get*`, `show*`, `check*`, or `validate*` never need confirmation. `DNS_validateDNSRecordsV1` is safe by design — it is the dry run for `DNS_updateDNSRecordsV1`, so prefer calling it first rather than asking the user to approve an unvalidated change.
+`readOnly: true` operations never need confirmation. `dns_records_validate` is the dry run for `dns_records_update` — call it first rather than asking the user to approve an unvalidated change.
