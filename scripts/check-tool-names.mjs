@@ -44,6 +44,7 @@ const NON_TOOL_IDENTIFIERS = new Set([
   "order_id",
   "per_page",
   "snapshot_id",
+  "website_type",
   // package.json / npm / filesystem
   "create-react-app",
   "engines.node",
@@ -73,9 +74,7 @@ function stripFencedBlocks(text) {
 /**
  * A backticked token is "tool-shaped" if it could plausibly be read as an MCP
  * tool name: a bare identifier containing an underscore, no whitespace, and no
- * path or call syntax. Hostinger's own names are mixed-case with an underscore
- * separator (hosting_listWebsitesV1), and the invented ones were snake_case —
- * both land here.
+ * path or call syntax.
  */
 function isToolShaped(token) {
   if (!token.includes("_")) return false;
@@ -114,14 +113,18 @@ const targets = ["rules", "skills", "agents", "commands", "README.md"].flatMap((
 
 const problems = [];
 const seen = new Set();
+const groupPrefix = new RegExp(`^(?:${Object.keys(catalog.groups).join("|")})_`);
+const syncedSkillsDir = `skills${path.sep}`;
 
 for (const file of targets) {
   const relative = path.relative(repoRoot, file);
+  const synced = relative.startsWith(syncedSkillsDir);
   const lines = stripFencedBlocks(readFileSync(file, "utf8")).split("\n");
 
   lines.forEach((line, index) => {
     for (const [, token] of line.matchAll(/`([^`\n]+)`/g)) {
       if (!isToolShaped(token)) continue;
+      if (synced && !groupPrefix.test(token)) continue;
       if (NON_TOOL_IDENTIFIERS.has(token)) continue;
       if (knownTools.has(token)) {
         seen.add(token);

@@ -1,6 +1,6 @@
 # Hostinger Connector for Cursor
 
-Official Cursor plugin for [Hostinger](https://hostinger.com/) — deploy and manage Hostinger websites, WordPress, domains, DNS, VPS, and subscriptions without leaving Cursor.
+Official Cursor plugin for [Hostinger](https://hostinger.com/) — deploy and manage Hostinger websites, WordPress, Agency Plan sites, domains, DNS, VPS, and subscriptions without leaving Cursor.
 
 The plugin wires the official [`hostinger-api-mcp`](https://www.npmjs.com/package/hostinger-api-mcp) servers into Cursor, plus a set of skills, rules, an agent, and a command so the agent can take real actions on your Hostinger account.
 
@@ -8,13 +8,13 @@ The plugin wires the official [`hostinger-api-mcp`](https://www.npmjs.com/packag
 
 ## What it does
 
-- Deploy Node.js and static sites to Hostinger, then follow the server-side build to completion.
-- Diagnose failed builds from real Hostinger build logs.
-- Read, validate, and update DNS zone records, with snapshot-based rollback.
-- Manage Hostinger-hosted WordPress: installations, plugins, themes, core, caches, PHP settings.
-- Manage domains — availability, registration, transfers, locks, forwarding, WHOIS.
-- Inspect VPS state, firewalls, snapshots, and metrics.
-- Review subscriptions, renewals, and payment methods.
+- Troubleshoot a site that is down, slow, erroring or failing to build, and apply the fix.
+- Connect a domain end to end — DNS without losing email records, SSL, HTTPS redirect.
+- Deploy static sites, Node.js apps, PHP apps and WordPress plugins or themes; set up Git auto-deploy, environment variables and databases.
+- Keep WordPress updated and secure across one site or all of them.
+- Audit the whole hosting account and get a prioritised to-do list.
+- Migrate a site from another host, testing it before DNS moves.
+- Manage domains, DNS, VPS, subscriptions, ecommerce and email marketing.
 
 ---
 
@@ -24,13 +24,13 @@ The plugin wires the official [`hostinger-api-mcp`](https://www.npmjs.com/packag
 
 [Install Hostinger Connector in Cursor](cursor://anysphere.cursor-deeplink/plugin/install?repo=hostinger/hostinger-cursor-plugin)
 
-### From an `/add-plugin` URL
-
-In Cursor chat, run:
+### From Cursor chat
 
 ```
-/add-plugin https://github.com/hostinger/hostinger-cursor-plugin
+/add-plugin hostinger-cursor-plugin
 ```
+
+Install from the marketplace rather than from the GitHub URL: an `/add-plugin https://github.com/...` install can stay on the commit it was installed from and miss later updates.
 
 ### Requirements
 
@@ -75,26 +75,27 @@ Never commit a token. The plugin ships a `beforeShellExecution` hook that inspec
 
 ## MCP servers
 
-Each product area runs as its own MCP server. This keeps the tool count per server small instead of loading all 289 tools into context at once, and it lets you disable areas you don't use from Cursor's MCP settings.
+Each product area runs as its own MCP server, so you can disable areas you don't use from Cursor's MCP settings. Every server exposes the same three tools — `search`, `execute` and `multi-execute` — over its own operations.
 
-| Server | Binary | Tools | Covers |
+| Server | Binary | Operations | Covers |
 |---|---|---:|---|
-| `hostinger-hosting` | `hostinger-hosting-mcp` | 48 | Websites, Node.js builds and deployments, databases, cron, PHP, subdomains |
-| `hostinger-wordpress` | `hostinger-wordpress-mcp` | 35 | WordPress installations, plugins, themes, core, LiteSpeed cache, maintenance mode |
-| `hostinger-domains` | `hostinger-domains-mcp` | 36 | Availability, registration, transfers, locks, forwarding, WHOIS |
+| `hostinger-hosting` | `hostinger-hosting-mcp` | 75 | Shared and Cloud websites, Node.js builds and deployments, databases, cron, PHP, SSL, files, Git |
+| `hostinger-wordpress` | `hostinger-wordpress-mcp` | 38 | WordPress installations, plugins, themes, core, LiteSpeed cache, maintenance mode |
+| `hostinger-agency-hosting` | `hostinger-agency-hosting-mcp` | 42 | Agency Plan websites, deploys, databases, SSL, PHP, metrics |
+| `hostinger-domains` | `hostinger-domains-mcp` | 42 | Availability, registration, transfers, locks, forwarding, WHOIS |
 | `hostinger-dns` | `hostinger-dns-mcp` | 8 | Zone records, snapshots, validation |
 | `hostinger-billing` | `hostinger-billing-mcp` | 9 | Subscriptions, auto-renewal, payment methods, catalog, orders |
-| `hostinger-reach` | `hostinger-reach-mcp` | 12 | Contacts, segments, email marketing profiles |
-| `hostinger-ecommerce` | `hostinger-ecommerce-mcp` | 12 | Stores, products, sales channels, shipping |
-| `hostinger-vps` | `hostinger-vps-mcp` | 62 | Virtual machines, firewalls, snapshots, backups, SSH keys, metrics |
+| `hostinger-reach` | `hostinger-reach-mcp` | 52 | Contacts, segments, email marketing profiles |
+| `hostinger-ecommerce` | `hostinger-ecommerce-mcp` | 29 | Stores, products, sales channels, shipping |
+| `hostinger-vps` | `hostinger-vps-mcp` | 64 | Virtual machines, firewalls, snapshots, backups, SSH keys, metrics |
 
-These eight mirror the product groups in the [Hostinger VS Code extension](https://open-vsx.org/extension/hostinger/hostinger-connector). `hostinger-api-mcp` also publishes `hostinger-mail-mcp`, `hostinger-agency-hosting-mcp`, and `hostinger-horizons-mcp`, which neither the plugin nor the extension wires up yet.
+`hostinger-api-mcp` also publishes `hostinger-mail-mcp` and `hostinger-horizons-mcp`, which the plugin doesn't wire up.
 
-Tool names are Hostinger's OpenAPI operation IDs — `hosting_listWebsitesV1`, `DNS_getDNSRecordsV1`, `billing_getSubscriptionListV1` — and the prefix tells you which server owns the call. WordPress tools share the `hosting_` prefix despite living on their own server. For the full catalog, see [`scripts/mcp-tools.json`](scripts/mcp-tools.json) or [hostinger/api-mcp-server](https://github.com/hostinger/api-mcp-server).
+Operation names follow the API — `hosting_websites_list`, `dns_records_list`, `billing_subscriptions_list` — and the prefix tells you which server owns the operation. For the full catalog, see [`scripts/mcp-tools.json`](scripts/mcp-tools.json) or [hostinger/api-mcp-server](https://github.com/hostinger/api-mcp-server).
 
 ### Already using the VS Code extension?
 
-The extension writes these same servers into `~/.cursor/mcp.json` for whichever IDE it detects. If you run both the extension and this plugin in Cursor, you'll get two copies of every server and roughly 200 duplicate tools. Pick one: keep the plugin for Cursor, or disconnect the extension from Cursor's config.
+The extension writes these same servers into `~/.cursor/mcp.json` for whichever IDE it detects. If you run both the extension and this plugin in Cursor, you'll get two copies of every server. Pick one: keep the plugin for Cursor, or disconnect the extension from Cursor's config.
 
 ---
 
@@ -102,28 +103,33 @@ The extension writes these same servers into `~/.cursor/mcp.json` for whichever 
 
 Worth knowing up front, because the agent will tell you rather than inventing a tool:
 
-- **No raw access or PHP error logs.** Build, deployment, and cron logs are available; HTTP access logs and PHP error logs live in hPanel only.
-- **No Node.js environment variables.** Set them in hPanel — there is no API for it.
-- **No shared-hosting backups.** VPS backups and snapshots are exposed; shared-hosting backups are not.
+- **No raw access or PHP error logs.** Build, Node.js runtime and cron output are available; HTTP access logs and PHP error logs live in hPanel only.
+- **No website backups.** VPS backups and snapshots are exposed; backups for Shared, Cloud and Agency websites are not.
+- **No CPU or memory metrics for Shared and Cloud plans.** Agency Plan orders have them.
 - **No on-demand DNS snapshots.** Hostinger creates them automatically. You can list, read, and restore them, but not trigger one.
 
 ---
 
 ## Available skills
 
+Invoke a skill with `/<name>` in chat, or let the agent pick it from your request.
+
 | Skill | What it does |
 |---|---|
-| [`deploy-nodejs-app`](skills/deploy-nodejs-app/SKILL.md) | Pick the right deploy tool, build a clean archive, follow the build to completion. |
-| [`diagnose-build-failure`](skills/diagnose-build-failure/SKILL.md) | Pull build logs, match the failure signature, propose a concrete fix. |
-| [`manage-dns-records`](skills/manage-dns-records/SKILL.md) | Read, validate, and update zone records; roll back via snapshots. |
-| [`troubleshoot-wordpress`](skills/troubleshoot-wordpress/SKILL.md) | Diagnose WP issues: PHP settings, plugin/theme conflicts, caches, maintenance mode. |
-| [`query-deployment-logs`](skills/query-deployment-logs/SKILL.md) | Pull and summarize build, deployment, and cron logs. |
+| [`troubleshoot-website`](skills/troubleshoot-website/SKILL.md) | One site, one symptom — down, slow, 5xx, SSL warning, failed build — to a named cause and a fix. |
+| [`connect-domain`](skills/connect-domain/SKILL.md) | Attach a domain, point DNS at Hostinger without losing `MX`/`TXT` records, install SSL, verify. |
+| [`deploy-to-hosting`](skills/deploy-to-hosting/SKILL.md) | Deploy an existing project the right way; Git auto-deploy, environment variables, databases. |
+| [`maintain-wordpress`](skills/maintain-wordpress/SKILL.md) | Check core, plugins and themes for updates and vulnerabilities; update safely, site by site. |
+| [`audit-hosting`](skills/audit-hosting/SKILL.md) | Read-only review of the whole hosting account with a prioritised to-do list. |
+| [`migrate-to-hosting`](skills/migrate-to-hosting/SKILL.md) | Move a site from another host; test the copy before DNS moves. |
+| [`hostinger-headless`](skills/hostinger-headless/SKILL.md) | Build a new site from a prompt — hosting, domain, optional store or WordPress backend, deploy. |
+
+The skills come from [hostinger/api-mcp-server](https://github.com/hostinger/api-mcp-server) and are synced into `skills/` by `scripts/sync-skills.mjs` — change them upstream, not here.
 
 ## Rules
 
-- [`prefer-mcp-tools`](rules/prefer-mcp-tools.mdc) — use MCP tools instead of `curl` / `ssh` / one-off scripts, and which server owns what. Always on.
-- [`confirm-destructive-actions`](rules/confirm-destructive-actions.mdc) — require explicit confirmation before any mutating tool call. Always on.
-- [`nodejs-deployments`](rules/nodejs-deployments.mdc) — which deploy tool to use, how to build the archive, and the accepted build override values.
+- [`prefer-mcp-tools`](rules/prefer-mcp-tools.mdc) — use the MCP servers instead of `curl` / `ssh` / one-off scripts, how `search` / `execute` / `multi-execute` work, and which server owns what. Always on.
+- [`confirm-destructive-actions`](rules/confirm-destructive-actions.mdc) — require explicit confirmation before any mutating operation. Always on.
 
 ## Agents
 
@@ -131,7 +137,7 @@ Worth knowing up front, because the agent will tell you rather than inventing a 
 
 ## Commands
 
-- [`/hostinger-status`](commands/hostinger-status.md) — one-screen snapshot of websites, deployments, domains, VPS, and subscriptions.
+- [`/hostinger-status`](commands/hostinger-status.md) — one-screen snapshot of websites, builds, domains, VPS, and subscriptions.
 
 ---
 
@@ -141,14 +147,19 @@ Worth knowing up front, because the agent will tell you rather than inventing a 
 # Validate the plugin manifest and component frontmatter
 node scripts/validate-template.mjs
 
-# Assert every MCP tool named in the docs actually exists
+# Assert every MCP operation named in the docs actually exists
 node scripts/check-tool-names.mjs
 
-# Refresh the tool catalog after the MCP server ships new tools
+# Refresh the operation catalog after the MCP server ships new operations
 node scripts/sync-mcp-tools.mjs
+
+# Refresh skills/ from the latest published server, a version, or a local skills directory
+node scripts/sync-skills.mjs
+node scripts/sync-skills.mjs 2.5.0
+node scripts/sync-skills.mjs ../public-api-generator/mcp/assets/skills
 ```
 
-`scripts/mcp-tools.json` is a checked-in snapshot of the published server's tool catalog, so `check-tool-names.mjs` runs offline in CI. Regenerate and commit it whenever the server adds tools. CI also runs an advisory job that flags when the snapshot has fallen behind `hostinger-api-mcp@latest`.
+`scripts/mcp-tools.json` is a checked-in snapshot of the published server's operation catalog, so `check-tool-names.mjs` runs offline in CI. `skills/` is generated the same way and is replaced wholesale on every sync. CI runs advisory jobs that flag when either has fallen behind `hostinger-api-mcp@latest`.
 
 ---
 

@@ -1,5 +1,32 @@
 # Changelog
 
+## [0.3.0] - 2026-09-30
+
+Catches the plugin up with `hostinger-api-mcp` 2.5.0, which renamed every operation after the CLI commands (2.1.0) and consolidated each server to `search`, `execute` and `multi-execute` (2.0.0).
+
+### Fixed
+
+- **Every operation name in the rules, agent, command and README had been renamed upstream.** Names such as `hosting_listWebsitesV1`, `DNS_updateDNSRecordsV1` and `hosting_deployJsApplication` no longer exist; the docs now use the current ones (`hosting_websites_list`, `dns_records_update`, `hosting_deploy-js-application`, …), checked against a refreshed catalog of 403 operations.
+- **Agency Plan sites could not be managed.** `mcp.json` now registers `hostinger-agency-hosting-mcp` alongside the other eight servers.
+- **The guidance said Node.js environment variables cannot be set through the API.** They can (`hosting_nodejs_replace-environment-variables`); the claim is removed from the rules and README.
+
+### Changed
+
+- **Skills now come from `hostinger/api-mcp-server`.** The five hand-written skills (`deploy-nodejs-app`, `diagnose-build-failure`, `manage-dns-records`, `query-deployment-logs`, `troubleshoot-wordpress`) are replaced by the seven the MCP server publishes: `troubleshoot-website`, `connect-domain`, `deploy-to-hosting`, `maintain-wordpress`, `audit-hosting`, `migrate-to-hosting` and `hostinger-headless`.
+- `rules/prefer-mcp-tools.mdc` explains the three-tool server model and the current operation prefixes, including `wordpress_`, `agency-hosting_`, `dns_` and `vps_`.
+- `rules/confirm-destructive-actions.mdc` keys confirmation off the `destructive` hint that `search` returns, and keeps a short list of the highest-risk operations.
+- `/hostinger-status` covers Agency Plan sites and reads the latest Node.js build per site.
+- `scripts/check-tool-names.mjs` checks only operation-prefixed names inside the synced `skills/`, since those are verified upstream and mention many request fields.
+
+### Removed
+
+- `rules/nodejs-deployments.mdc` — the `deploy-to-hosting` skill covers deploy methods, archive rules and build settings, with the current `app_type` list.
+
+### Added
+
+- `scripts/sync-skills.mjs` — replaces `skills/` with the skills from a published `hostinger-api-mcp` version or a local skills directory, leaving out the cold-start `entry/` bootstrap.
+- An advisory `skills-drift` CI job that flags when `skills/` falls behind `hostinger-api-mcp@latest`.
+
 ## [0.2.0] - 2026-08-06
 
 Brings the plugin back in line with `hostinger-api-mcp` (now 1.29.0) and with the product surface of the Hostinger VS Code extension (1.3.2). The plugin was last touched on 2026-05-27, two days before OAuth shipped.
