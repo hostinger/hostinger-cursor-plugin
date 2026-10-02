@@ -2,7 +2,7 @@
 
 Official Cursor plugin for [Hostinger](https://hostinger.com/) — deploy and manage Hostinger websites, WordPress, Agency Plan sites, domains, DNS, VPS, and subscriptions without leaving Cursor.
 
-The plugin wires the official [`hostinger-api-mcp`](https://www.npmjs.com/package/hostinger-api-mcp) servers into Cursor, plus a set of skills, rules, an agent, and a command so the agent can take real actions on your Hostinger account.
+The plugin wires the official [`@hostinger/mcp`](https://www.npmjs.com/package/@hostinger/mcp) servers into Cursor, plus a set of skills, rules, an agent, and a command so the agent can take real actions on your Hostinger account.
 
 ---
 
@@ -50,8 +50,8 @@ Access tokens refresh automatically, and the credentials are shared across every
 To sign in ahead of time, or to sign out:
 
 ```bash
-npx --package=hostinger-api-mcp@latest hostinger-hosting-mcp --login
-npx --package=hostinger-api-mcp@latest hostinger-hosting-mcp --logout
+npx --package=@hostinger/mcp@latest hostinger-hosting-mcp --login
+npx --package=@hostinger/mcp@latest hostinger-hosting-mcp --logout
 ```
 
 ### API token (optional)
@@ -89,7 +89,7 @@ Each product area runs as its own MCP server, so you can disable areas you don't
 | `hostinger-ecommerce` | `hostinger-ecommerce-mcp` | 29 | Stores, products, sales channels, shipping |
 | `hostinger-vps` | `hostinger-vps-mcp` | 64 | Virtual machines, firewalls, snapshots, backups, SSH keys, metrics |
 
-`hostinger-api-mcp` also publishes `hostinger-mail-mcp` and `hostinger-horizons-mcp`, which the plugin doesn't wire up.
+`@hostinger/mcp` also publishes `hostinger-mail-mcp` and `hostinger-horizons-mcp`, which the plugin doesn't wire up.
 
 Operation names follow the API — `hosting_websites_list`, `dns_records_list`, `billing_subscriptions_list` — and the prefix tells you which server owns the operation. For the full catalog, see [`scripts/mcp-tools.json`](scripts/mcp-tools.json) or [hostinger/api-mcp-server](https://github.com/hostinger/api-mcp-server).
 
@@ -159,14 +159,14 @@ node scripts/sync-skills.mjs 2.5.0
 node scripts/sync-skills.mjs ../public-api-generator/mcp/assets/skills
 ```
 
-`scripts/mcp-tools.json` is a checked-in snapshot of the published server's operation catalog, so `check-tool-names.mjs` runs offline in CI. `skills/` is generated the same way and is replaced wholesale on every sync. CI runs advisory jobs that flag when either has fallen behind `hostinger-api-mcp@latest`.
+`scripts/mcp-tools.json` is a checked-in snapshot of the published server's operation catalog, so `check-tool-names.mjs` runs offline in CI. `skills/` is generated the same way and is replaced wholesale on every sync. CI runs advisory jobs that flag when either has fallen behind `@hostinger/mcp@latest`.
 
 ---
 
 ## Links
 
 - MCP server source: https://github.com/hostinger/api-mcp-server
-- MCP server on npm: https://www.npmjs.com/package/hostinger-api-mcp
+- MCP server on npm: https://www.npmjs.com/package/@hostinger/mcp
 - Hostinger VS Code extension: https://open-vsx.org/extension/hostinger/hostinger-connector
 - Hostinger API docs: https://developers.hostinger.com
 - Hostinger: https://hostinger.com/
