@@ -1,6 +1,6 @@
 {
-  "package": "hostinger-api-mcp",
-  "version": "2.5.0",
+  "package": "@hostinger/mcp",
+  "version": "2.7.0",
   "total": 403,
   "groups": {
     "agency-hosting": [
