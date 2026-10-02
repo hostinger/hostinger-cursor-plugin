@@ -159,7 +159,7 @@ node scripts/sync-skills.mjs 2.5.0
 node scripts/sync-skills.mjs ../public-api-generator/mcp/assets/skills
 ```
 
-`scripts/mcp-tools.json` is a checked-in snapshot of the published server's operation catalog, so `check-tool-names.mjs` runs offline in CI. `skills/` is generated the same way and is replaced wholesale on every sync. CI runs advisory jobs that flag when either has fallen behind `@hostinger/mcp@latest`.
+`scripts/mcp-tools.json` is a checked-in snapshot of the published server's operation catalog, so `check-tool-names.mjs` runs offline in CI. `skills/` is generated the same way and is replaced wholesale on every sync. The `mcp-sync` workflow (daily, or on demand from the Actions tab) refreshes both from the latest `@hostinger/mcp` release and opens a `chore/mcp-sync` PR.
 
 ---
 
