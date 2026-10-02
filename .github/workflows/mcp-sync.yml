@@ -48,7 +48,8 @@ jobs:
         env:
           INPUT_VERSION: ${{ inputs.version }}
         run: |
-          V="${INPUT_VERSION:-$(npm view @hostinger/mcp version)}"
+          V=$(npm view "@hostinger/mcp@${INPUT_VERSION:-latest}" version)
+          if ! [[ "$V" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then echo "::error::Unresolvable @hostinger/mcp version '${INPUT_VERSION:-latest}'"; exit 1; fi
           echo "version=$V" >> "$GITHUB_OUTPUT"
 
       - name: Sync skills and operation catalog
@@ -57,6 +58,12 @@ jobs:
         run: |
           node scripts/sync-skills.mjs "$V"
           node scripts/sync-mcp-tools.mjs "$V"
+          # mcp-tools.json records the source version; a release that changes no
+          # operation would otherwise open a PR for that one line.
+          # shellcheck disable=SC2143
+          if [ -z "$(git diff -U0 -- scripts/mcp-tools.json | grep '^[-+] ' | grep -v '"version":')" ]; then
+            git checkout -- scripts/mcp-tools.json
+          fi
 
       # No early exit on an empty diff: create-pull-request then closes a stale
       # chore/mcp-sync PR, which is what we want once main has caught up.
