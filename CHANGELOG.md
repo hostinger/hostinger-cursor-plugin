@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.3.2] - 2026-10-05
+
+### Changed
+
+- Synced with `@hostinger/mcp` 2.5.0: deploy-to-hosting, hostinger-headless, migrate-to-hosting
+
 ## [0.3.1] - 2026-10-02
 
 ### Changed
