@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Regenerate scripts/mcp-tools.json from a published hostinger-api-mcp tarball.
+ * Regenerate scripts/mcp-tools.json from a published @hostinger/mcp tarball.
  *
  *   node scripts/sync-mcp-tools.mjs            # latest
  *   node scripts/sync-mcp-tools.mjs 1.29.0     # a specific version
@@ -16,7 +16,7 @@ import path from "node:path";
 import process from "node:process";
 
 const version = process.argv[2] ?? "latest";
-const spec = `hostinger-api-mcp@${version}`;
+const spec = `@hostinger/mcp@${version}`;
 const outFile = path.join(import.meta.dirname, "mcp-tools.json");
 
 const work = mkdtempSync(path.join(tmpdir(), "hostinger-mcp-tools-"));
@@ -53,7 +53,7 @@ try {
   const total = Object.values(groups).reduce((n, g) => n + g.length, 0);
   writeFileSync(
     outFile,
-    `${JSON.stringify({ package: "hostinger-api-mcp", version: resolvedVersion, total, groups }, null, 2)}\n`,
+    `${JSON.stringify({ package: "@hostinger/mcp", version: resolvedVersion, total, groups }, null, 2)}\n`,
   );
 
   console.log(`Wrote ${path.relative(process.cwd(), outFile)}`);

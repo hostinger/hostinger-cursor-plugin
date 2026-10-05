@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.3.1] - 2026-10-02
+
+### Changed
+
+- MCP servers run from `@hostinger/mcp` instead of the legacy `hostinger-api-mcp` alias. Same servers and binaries.
+- Skills and the operation catalog synced with `@hostinger/mcp` 2.7.0.
+- New MCP server releases now arrive as an automated sync PR; the advisory `catalog-drift` and `skills-drift` jobs are gone.
+
 ## [0.3.0] - 2026-09-30
 
 Catches the plugin up with `hostinger-api-mcp` 2.5.0, which renamed every operation after the CLI commands (2.1.0) and consolidated each server to `search`, `execute` and `multi-execute` (2.0.0).
