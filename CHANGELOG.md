@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.3.2] - 2026-10-10
+
+### Changed
+
+- Synced with `@hostinger/mcp` 2.11.0: operation catalog
+
 ## [0.3.1] - 2026-10-02
 
 ### Changed
