@@ -1,7 +1,7 @@
 {
   "package": "@hostinger/mcp",
-  "version": "2.7.0",
-  "total": 403,
+  "version": "3.1.0",
+  "total": 421,
   "groups": {
     "agency-hosting": [
       "agency-hosting_cache_clear-website",
@@ -46,6 +46,11 @@
       "agency-hosting_wordpress_change-version",
       "agency-hosting_wordpress_list-versions",
       "agency-hosting_wordpress_settings"
+    ],
+    "agent-readiness": [
+      "agent-readiness_checks_list",
+      "agent-readiness_scans_get",
+      "agent-readiness_scans_run"
     ],
     "billing": [
       "billing_catalog_list",
@@ -187,9 +192,14 @@
       "hosting_files_website-content",
       "hosting_git_auto-deployment-settings",
       "hosting_git_delete-auto-deployment-settings",
+      "hosting_git_deploy-website-repository",
+      "hosting_git_generate-ssh-key",
       "hosting_git_list-installation-repositories",
       "hosting_git_list-installations",
+      "hosting_git_list-website-repositories",
+      "hosting_git_ssh-public-key",
       "hosting_git_update-auto-deployment-settings",
+      "hosting_headless_submit-build-report",
       "hosting_import-wordpress-website",
       "hosting_list-js-deployments",
       "hosting_nodejs_analyse-failed-build",
@@ -226,7 +236,8 @@
       "hosting_websites_delete",
       "hosting_websites_deploy-static-site-archive",
       "hosting_websites_list",
-      "hosting_websites_list-setups"
+      "hosting_websites_list-setups",
+      "hosting_websites_start-setup"
     ],
     "mail": [
       "mail_aliases_create-alias",
@@ -293,11 +304,15 @@
       "reach_forms_delete",
       "reach_forms_get",
       "reach_forms_list",
+      "reach_profiles_connect-sending-domain",
       "reach_profiles_connected-sending-domain",
+      "reach_profiles_delete-sending-domain",
       "reach_profiles_domain-dns-status",
       "reach_profiles_list",
       "reach_profiles_list-plan-feature-access",
       "reach_profiles_remaining-plan-limits",
+      "reach_profiles_settings",
+      "reach_profiles_update-settings",
       "reach_segments_count-profile-contacts",
       "reach_segments_create",
       "reach_segments_create-profile",
@@ -370,6 +385,9 @@
       "vps_snapshots_delete",
       "vps_snapshots_get",
       "vps_snapshots_restore",
+      "vps_ssh-keys_add-virtual-machine",
+      "vps_ssh-keys_list-virtual-machine",
+      "vps_ssh-keys_remove-virtual-machine",
       "vps_templates_get",
       "vps_templates_list",
       "vps_virtual-machines_attached-public-keys",
@@ -389,6 +407,8 @@
       "vps_virtual-machines_stop"
     ],
     "wordpress": [
+      "wordpress_ai-content_generate-images",
+      "wordpress_ai-content_generation-result",
       "wordpress_ai-tools_set-option-status",
       "wordpress_ai-tools_show-option-status",
       "wordpress_installations_check-if-are-valid",
