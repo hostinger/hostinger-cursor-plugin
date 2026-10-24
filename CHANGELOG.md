@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.3.2] - 2026-10-24
+
+### Changed
+
+- Synced with `@hostinger/mcp` 3.8.1: audit-hosting, deploy-to-hosting, hostinger-headless, migrate-to-hosting, operation catalog, troubleshoot-website
+
 ## [0.3.1] - 2026-10-02
 
 ### Changed
