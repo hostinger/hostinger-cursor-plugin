@@ -64,6 +64,8 @@ const NON_TOOL_IDENTIFIERS = new Set([
   "wp_options",
   "wp-admin",
   "siteurl",
+  "mail_sent",
+  "mail_failed",
 ]);
 
 /** Ignore fenced code blocks: JSON examples and shell snippets aren't guidance. */
