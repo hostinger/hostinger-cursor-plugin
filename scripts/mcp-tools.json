@@ -1,7 +1,7 @@
 {
   "package": "@hostinger/mcp",
-  "version": "2.7.0",
-  "total": 403,
+  "version": "3.29.0",
+  "total": 468,
   "groups": {
     "agency-hosting": [
       "agency-hosting_cache_clear-website",
@@ -45,7 +45,14 @@
       "agency-hosting_websites_list-processes",
       "agency-hosting_wordpress_change-version",
       "agency-hosting_wordpress_list-versions",
-      "agency-hosting_wordpress_settings"
+      "agency-hosting_wordpress_settings",
+      "changelog_list-entries"
+    ],
+    "agent-readiness": [
+      "agent-readiness_checks_list",
+      "agent-readiness_scans_get",
+      "agent-readiness_scans_run",
+      "changelog_list-entries"
     ],
     "billing": [
       "billing_catalog_list",
@@ -56,9 +63,11 @@
       "billing_subscriptions_disable-auto-renewal",
       "billing_subscriptions_enable-auto-renewal",
       "billing_subscriptions_list",
-      "billing_subscriptions_renew"
+      "billing_subscriptions_renew",
+      "changelog_list-entries"
     ],
     "dns": [
+      "changelog_list-entries",
       "dns_records_delete",
       "dns_records_list",
       "dns_records_reset",
@@ -69,6 +78,7 @@
       "dns_snapshots_restore"
     ],
     "domains": [
+      "changelog_list-entries",
       "domains_availability_check",
       "domains_availability_suggest-names-from",
       "domains_availability_suggest-names-from-description",
@@ -113,6 +123,7 @@
       "domains_whois_usage"
     ],
     "ecommerce": [
+      "changelog_list-entries",
       "ecommerce_discounts_create",
       "ecommerce_discounts_list",
       "ecommerce_miscellaneous_custom-storefront-setup-instructions",
@@ -143,7 +154,15 @@
       "ecommerce_stores_list",
       "ecommerce_stores_metadata"
     ],
+    "gpu": [
+      "changelog_list-entries",
+      "gpu_catalog_pool",
+      "gpu_catalog_pool-groups",
+      "gpu_catalog_pool-instance-types",
+      "gpu_catalog_pool-os-templates"
+    ],
     "horizons": [
+      "changelog_list-entries",
       "horizons_websites_clone",
       "horizons_websites_create",
       "horizons_websites_edit",
@@ -152,9 +171,16 @@
       "horizons_websites_publish"
     ],
     "hosting": [
+      "changelog_list-entries",
+      "hosting_cache_clear",
       "hosting_cache_clear-website",
+      "hosting_cache_status",
       "hosting_cache_toggle-cacheless",
       "hosting_cache_toggle-website",
+      "hosting_cdn_disable",
+      "hosting_cdn_enable",
+      "hosting_cdn_purge-cache",
+      "hosting_cdn_status",
       "hosting_cron-jobs_create",
       "hosting_cron-jobs_delete",
       "hosting_cron-jobs_list",
@@ -170,6 +196,7 @@
       "hosting_databases_repair",
       "hosting_databases_setup-website",
       "hosting_datacenters_list",
+      "hosting_deploy",
       "hosting_deploy-js-application",
       "hosting_deploy-static-website",
       "hosting_deploy-wordpress-plugin",
@@ -185,11 +212,17 @@
       "hosting_files_generate-upload-url",
       "hosting_files_list-website-and-directories",
       "hosting_files_website-content",
+      "hosting_get-deployment",
       "hosting_git_auto-deployment-settings",
       "hosting_git_delete-auto-deployment-settings",
+      "hosting_git_deploy-website-repository",
+      "hosting_git_generate-ssh-key",
       "hosting_git_list-installation-repositories",
       "hosting_git_list-installations",
+      "hosting_git_list-website-repositories",
+      "hosting_git_ssh-public-key",
       "hosting_git_update-auto-deployment-settings",
+      "hosting_headless_submit-build-report",
       "hosting_import-wordpress-website",
       "hosting_list-js-deployments",
       "hosting_nodejs_analyse-failed-build",
@@ -197,6 +230,7 @@
       "hosting_nodejs_build-logs",
       "hosting_nodejs_build-settings",
       "hosting_nodejs_build-settings-from-archive",
+      "hosting_nodejs_build-settings-from-repository",
       "hosting_nodejs_clear-runtime-logs",
       "hosting_nodejs_list-builds",
       "hosting_nodejs_list-environment-variables",
@@ -222,13 +256,22 @@
       "hosting_ssl_status",
       "hosting_ssl_toggle-https-redirect",
       "hosting_ssl_uninstall",
+      "hosting_websites_add-domain",
       "hosting_websites_create",
+      "hosting_websites_create-deprecated",
       "hosting_websites_delete",
       "hosting_websites_deploy-static-site-archive",
+      "hosting_websites_get-settings",
       "hosting_websites_list",
-      "hosting_websites_list-setups"
+      "hosting_websites_list-domains",
+      "hosting_websites_list-setups",
+      "hosting_websites_remove-domain",
+      "hosting_websites_start-setup",
+      "hosting_websites_trigger-event",
+      "hosting_websites_update-settings"
     ],
     "mail": [
+      "changelog_list-entries",
       "mail_aliases_create-alias",
       "mail_aliases_delete-alias",
       "mail_aliases_list",
@@ -269,6 +312,7 @@
       "mail_webhooks_update"
     ],
     "reach": [
+      "changelog_list-entries",
       "reach_automations_get",
       "reach_automations_list",
       "reach_automations_list-steps",
@@ -290,14 +334,31 @@
       "reach_contacts_list-groups",
       "reach_contacts_list-profile",
       "reach_contacts_update",
+      "reach_forms_add-submitter-tags",
+      "reach_forms_create",
       "reach_forms_delete",
+      "reach_forms_duplicate",
       "reach_forms_get",
       "reach_forms_list",
+      "reach_forms_remove-submitter-tag",
+      "reach_forms_update",
+      "reach_forms_update-template",
+      "reach_integrations_connect-ai-website-builder-site",
+      "reach_integrations_connect-ecommerce-store",
+      "reach_integrations_disconnect-ai-website-builder-site",
+      "reach_integrations_disconnect-ecommerce-store",
+      "reach_integrations_disconnect-wordpress-site",
+      "reach_integrations_list-connected-websites",
+      "reach_integrations_list-ecommerce-stores",
+      "reach_profiles_connect-sending-domain",
       "reach_profiles_connected-sending-domain",
+      "reach_profiles_delete-sending-domain",
       "reach_profiles_domain-dns-status",
       "reach_profiles_list",
       "reach_profiles_list-plan-feature-access",
       "reach_profiles_remaining-plan-limits",
+      "reach_profiles_settings",
+      "reach_profiles_update-settings",
       "reach_segments_count-profile-contacts",
       "reach_segments_create",
       "reach_segments_create-profile",
@@ -320,9 +381,11 @@
       "reach_tags_remove-contacts-from",
       "reach_tags_rename",
       "reach_templates_create-email",
+      "reach_templates_email",
       "reach_templates_list-email"
     ],
     "vps": [
+      "changelog_list-entries",
       "vps_actions_get",
       "vps_actions_list",
       "vps_backups_list",
@@ -370,6 +433,9 @@
       "vps_snapshots_delete",
       "vps_snapshots_get",
       "vps_snapshots_restore",
+      "vps_ssh-keys_add-virtual-machine",
+      "vps_ssh-keys_list-virtual-machine",
+      "vps_ssh-keys_remove-virtual-machine",
       "vps_templates_get",
       "vps_templates_list",
       "vps_virtual-machines_attached-public-keys",
@@ -389,6 +455,9 @@
       "vps_virtual-machines_stop"
     ],
     "wordpress": [
+      "changelog_list-entries",
+      "wordpress_ai-content_generate-images",
+      "wordpress_ai-content_generation-result",
       "wordpress_ai-tools_set-option-status",
       "wordpress_ai-tools_show-option-status",
       "wordpress_installations_check-if-are-valid",
