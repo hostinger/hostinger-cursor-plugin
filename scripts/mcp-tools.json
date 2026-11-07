@@ -1,7 +1,7 @@
 {
   "package": "@hostinger/mcp",
-  "version": "3.29.0",
-  "total": 468,
+  "version": "3.31.1",
+  "total": 469,
   "groups": {
     "agency-hosting": [
       "agency-hosting_cache_clear-website",
@@ -245,6 +245,7 @@
       "hosting_php_get",
       "hosting_php_info",
       "hosting_php_reset-extensions",
+      "hosting_php_update",
       "hosting_php_update-extensions",
       "hosting_php_update-options",
       "hosting_php_update-version",
