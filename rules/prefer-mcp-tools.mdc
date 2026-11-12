@@ -5,7 +5,7 @@ alwaysApply: true
 
 # Use the Hostinger MCP servers, not shell hacks
 
-When the user asks about anything on Hostinger — websites, WordPress, Agency Plan sites, domains, DNS, VPS, subscriptions, email marketing, ecommerce — use one of this plugin's Hostinger MCP servers instead of:
+When the user asks about anything on Hostinger — websites, WordPress, Agency Plan sites, domains, DNS, VPS, subscriptions, email mailboxes, email marketing, ecommerce — use one of this plugin's Hostinger MCP servers instead of:
 
 - `curl` / `wget` against `https://developers.hostinger.com`
 - `ssh` into a host to read files or run commands
@@ -36,6 +36,7 @@ The plugin registers one server per product area. The operation prefix tells you
 | `hostinger-reach` | `reach_` | Contacts, segments, email marketing profiles |
 | `hostinger-ecommerce` | `ecommerce_` | Stores, products, sales channels, shipping |
 | `hostinger-vps` | `vps_` | Virtual machines, firewalls, snapshots, backups, SSH keys, metrics |
+| `hostinger-mail` | `mail_` | Email orders, mailboxes, aliases, forwarders, catch-alls, autoreplies, mail logs, webhooks, Mail API tokens |
 
 ## Operation selection
 
@@ -43,6 +44,12 @@ The plugin registers one server per product area. The operation prefix tells you
 - Several endpoints are **batch-oriented**. DNS has no single-record create call: `dns_records_update` takes a zone array, and its `overwrite` flag defaults to `true`, which replaces every record with the same name and type.
 - Read before you write: pair a read with every change so you can report the before and after state.
 - For multi-step web hosting work — troubleshooting a site, connecting a domain, deploying, WordPress maintenance, an account audit, a migration — follow the matching skill in this plugin.
+
+## Email
+
+- The `mail_` operations set up email: they create and delete mailboxes, aliases and forwarders, and read mail logs. They cannot read or send a message.
+- To read, search, send or organise email in a mailbox, create a token with `mail_api-tokens_create`, scoped to the mailboxes you need, and use it with the Hostinger Mail API at `https://api.mail.hostinger.com/`. Revoke it with `mail_api-tokens_revoke` when the work is done.
+- Never ask the user for a mailbox password, and never change one with `mail_mailboxes_change-mailbox-password` to get in.
 
 ## Not covered by the API
 

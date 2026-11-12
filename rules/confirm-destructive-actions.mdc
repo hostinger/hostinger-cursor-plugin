@@ -17,7 +17,8 @@ The ones that do the most damage when wrong — confirm these even inside a flow
 - **Deletes data for good:** `hosting_websites_delete`, `agency-hosting_websites_delete`, `hosting_databases_delete`, `agency-hosting_databases_delete-website`, `wordpress_installations_delete`, `vps_virtual-machines_recreate`.
 - **Overwrites what is live:** `hosting_deploy-static-website`, `hosting_deploy-js-application`, `hosting_websites_deploy-static-site-archive`, `hosting_nodejs_start-build`, `hosting_import-wordpress-website`, `wordpress_installations_import-website`, `agency-hosting_deploy-php-application`, `agency-hosting_deploy-node-static-website`, `vps_snapshots_restore`, `vps_backups_restore`.
 - **Replaces a whole set:** `hosting_nodejs_replace-environment-variables` (every variable not sent is deleted), `agency-hosting_php_replace-website-options`, `agency-hosting_php_replace-website-extensions`.
-- **Breaks traffic or mail:** `dns_records_update` (its `overwrite` defaults to `true`), `dns_records_delete`, `dns_records_reset`, `dns_snapshots_restore`, `domains_portfolio_update-nameservers`, `agency-hosting_domains_change-website`, and any change to apex `A`/`AAAA`, `NS` or `MX` records.
+- **Breaks traffic or mail:** `dns_records_update` (its `overwrite` defaults to `true`), `dns_records_delete`, `dns_records_reset`, `dns_snapshots_restore`, `domains_portfolio_update-nameservers`, `agency-hosting_domains_change-website`, and any change to apex `A`/`AAAA`, `NS` or `MX` records; `mail_mailboxes_delete-mailbox` and `mail_mailboxes_change-mailbox-password`, which signs every mail client out.
+- **Hands out access:** `mail_api-tokens_create` returns a token that can read and send email in the mailboxes it is scoped to.
 
 ## Confirmation format
 

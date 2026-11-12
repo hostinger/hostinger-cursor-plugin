@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.3.3] - 2026-11-12
+
+### Fixed
+
+- **Email could not be managed.** `mcp.json` now registers `hostinger-mail-mcp`, so the agent can create mailboxes, aliases and forwarders and issue Mail API tokens. Without it the agent reported that Hostinger has no email tools.
+
+### Changed
+
+- `rules/prefer-mcp-tools.mdc` lists the `mail_` prefix and says how to reach the inside of a mailbox: a scoped token from `mail_api-tokens_create`, used with the Hostinger Mail API, never the mailbox password.
+- `rules/confirm-destructive-actions.mdc` covers deleting a mailbox, changing its password and creating a Mail API token.
+
 ## [0.3.2] - 2026-11-05
 
 ### Changed
