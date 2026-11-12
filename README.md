@@ -14,7 +14,7 @@ The plugin wires the official [`@hostinger/mcp`](https://www.npmjs.com/package/@
 - Keep WordPress updated and secure across one site or all of them.
 - Audit the whole hosting account and get a prioritised to-do list.
 - Migrate a site from another host, testing it before DNS moves.
-- Manage domains, DNS, VPS, subscriptions, ecommerce and email marketing.
+- Manage domains, DNS, VPS, subscriptions, ecommerce, email and email marketing.
 
 ---
 
@@ -88,8 +88,11 @@ Each product area runs as its own MCP server, so you can disable areas you don't
 | `hostinger-reach` | `hostinger-reach-mcp` | 52 | Contacts, segments, email marketing profiles |
 | `hostinger-ecommerce` | `hostinger-ecommerce-mcp` | 29 | Stores, products, sales channels, shipping |
 | `hostinger-vps` | `hostinger-vps-mcp` | 64 | Virtual machines, firewalls, snapshots, backups, SSH keys, metrics |
+| `hostinger-mail` | `hostinger-mail-mcp` | 38 | Email orders, mailboxes, aliases, forwarders, catch-alls, autoreplies, mail logs, webhooks, Mail API tokens |
 
-`@hostinger/mcp` also publishes `hostinger-mail-mcp` and `hostinger-horizons-mcp`, which the plugin doesn't wire up.
+The mail server sets up email. To read or send messages, create a token with `mail_api-tokens_create` and use it with the [Hostinger Mail API](https://api.mail.hostinger.com/).
+
+`@hostinger/mcp` also publishes `hostinger-horizons-mcp`, which the plugin doesn't wire up.
 
 Operation names follow the API — `hosting_websites_list`, `dns_records_list`, `billing_subscriptions_list` — and the prefix tells you which server owns the operation. For the full catalog, see [`scripts/mcp-tools.json`](scripts/mcp-tools.json) or [hostinger/api-mcp-server](https://github.com/hostinger/api-mcp-server).
 
