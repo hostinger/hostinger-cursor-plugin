@@ -5,7 +5,7 @@ alwaysApply: true
 
 # Use the Hostinger MCP servers, not shell hacks
 
-When the user asks about anything on Hostinger — websites, WordPress, Agency Plan sites, domains, DNS, VPS, subscriptions, email mailboxes, email marketing, ecommerce — use one of this plugin's Hostinger MCP servers instead of:
+When the user asks about anything on Hostinger — websites, WordPress, Agency Plan sites, domains, DNS, VPS, subscriptions, email, email marketing, ecommerce — use one of this plugin's Hostinger MCP servers instead of:
 
 - `curl` / `wget` against `https://developers.hostinger.com`
 - `ssh` into a host to read files or run commands

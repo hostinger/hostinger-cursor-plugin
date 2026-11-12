@@ -14,7 +14,7 @@ The plugin wires the official [`@hostinger/mcp`](https://www.npmjs.com/package/@
 - Keep WordPress updated and secure across one site or all of them.
 - Audit the whole hosting account and get a prioritised to-do list.
 - Migrate a site from another host, testing it before DNS moves.
-- Manage domains, DNS, VPS, subscriptions, ecommerce, email mailboxes and email marketing.
+- Manage domains, DNS, VPS, subscriptions, ecommerce, email and email marketing.
 
 ---
 

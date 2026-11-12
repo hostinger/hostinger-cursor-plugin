@@ -2,7 +2,7 @@
   "name": "hostinger-connector",
   "displayName": "Hostinger Connector",
   "version": "0.3.3",
-  "description": "MCP plugin to deploy and manage Hostinger websites, WordPress, domains, DNS, VPS, email mailboxes, and subscriptions from inside Cursor.",
+  "description": "MCP plugin to deploy and manage Hostinger websites, WordPress, domains, DNS, VPS, email, and subscriptions from inside Cursor.",
   "author": "Hostinger",
   "license": "MIT",
   "homepage": "https://hostinger.com/",
