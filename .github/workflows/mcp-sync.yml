@@ -98,6 +98,7 @@ jobs:
           echo "new=$NEW" >> "$GITHUB_OUTPUT"
 
       - name: Open or update the sync PR
+        id: cpr
         uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ steps.token.outputs.token }}
@@ -111,3 +112,12 @@ jobs:
           body: |
             Synced with `@hostinger/mcp` ${{ steps.version.outputs.version }}; version bumped to ${{ steps.bump.outputs.new }}.
             If CI's check-tool-names fails, the release renamed operations the hand-written rules/agents/commands use — fix them on this branch before merging.
+
+      # Merges as the App once required checks pass; the App is exempt from the
+      # org approval rule, same as api-remote-mcp's regeneration PR.
+      - name: Enable auto-merge
+        if: steps.cpr.outputs.pull-request-number
+        env:
+          GH_TOKEN: ${{ steps.token.outputs.token }}
+          PR_NUMBER: ${{ steps.cpr.outputs.pull-request-number }}
+        run: gh pr merge "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --squash --auto
