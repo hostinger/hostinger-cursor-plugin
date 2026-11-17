@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.3.4] - 2026-11-17
+
+### Changed
+
+- Synced with `@hostinger/mcp` 4.3.0: deploy-to-hosting, hostinger-headless, maintain-wordpress, operation catalog, troubleshoot-website
+
 ## [0.3.3] - 2026-11-12
 
 ### Fixed
