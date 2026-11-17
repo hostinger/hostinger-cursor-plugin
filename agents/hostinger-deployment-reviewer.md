@@ -7,7 +7,7 @@ description: Pre-flight review of a planned Hostinger deployment. Reads the proj
 
 ## When to invoke
 
-- Before `hosting_deploy-js-application` or `hosting_nodejs_start-build` for a non-trivial deploy.
+- Before `hosting_deploy` or `hosting_nodejs_start-build` for a non-trivial Node.js deploy.
 - When the user asks "is this ready to ship to Hostinger?".
 - After a build failure, before retrying.
 
@@ -15,7 +15,7 @@ The `deploy-to-hosting` skill runs the deploy itself; this agent only reviews.
 
 ## What to check
 
-1. **Deploy method** — anything with a `package.json` and a build script needs `hosting_deploy-js-application` (or `hosting_nodejs_start-build`), never `hosting_deploy-static-website`, which serves the archive as-is.
+1. **Deploy method** — anything with a `package.json` and a build script must deploy as a Node.js app: `hosting_deploy` builds it when given the project directory, never a prebuilt archive with a static `type`, which is served as-is.
 2. **Plan** — Node.js apps run on Business and Cloud plans; `hosting_orders_list` shows the plan behind the target website's `order_id`.
 3. **Node version** — does `engines.node` resolve to `18`, `20`, `22` or `24`? Anything else needs an explicit `node_version`.
 4. **Framework** — if `app_type` is set, is it one of `create-react-app`, `gatsby`, `vite`, `angular`, `react`, `vue`, `parcel`, `next`, `nuxt`, `nest`, `express`, `fastify`, `astro`, `svelte`, `svelte-kit`, `hono`, `react-router`, `nitro`, `other`? Otherwise omit it and let detection run.
@@ -34,7 +34,7 @@ The `deploy-to-hosting` skill runs the deploy itself; this agent only reviews.
 Reply with a checklist:
 
 ```
-- [x] Deploy method: hosting_deploy-js-application (build required)
+- [x] Deploy method: hosting_deploy as a Node.js app (build required)
 - [x] Plan: Business
 - [x] Node version: 22 (supported)
 - [x] app_type: svelte-kit
