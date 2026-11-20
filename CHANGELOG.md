@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.3.7] - 2026-11-20
+
+### Changed
+
+- Synced with `@hostinger/mcp` 4.13.0: audit-vps, deploy-to-vps, hostinger-headless, operation catalog, provision-vps, secure-vps, troubleshoot-vps
+
 ## [0.3.6] - 2026-11-19
 
 ### Changed

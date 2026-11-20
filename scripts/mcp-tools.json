@@ -1,7 +1,7 @@
 {
   "package": "@hostinger/mcp",
-  "version": "4.3.0",
-  "total": 477,
+  "version": "4.13.0",
+  "total": 478,
   "groups": {
     "agency-hosting": [
       "agency-hosting_cache_clear-website",
@@ -68,6 +68,7 @@
     ],
     "dns": [
       "changelog_list-entries",
+      "dns_propagation_check-record",
       "dns_records_delete",
       "dns_records_list",
       "dns_records_reset",
