@@ -1,7 +1,7 @@
 {
   "package": "@hostinger/mcp",
-  "version": "4.13.0",
-  "total": 478,
+  "version": "4.15.0",
+  "total": 476,
   "groups": {
     "agency-hosting": [
       "agency-hosting_cache_clear-website",
@@ -433,7 +433,6 @@
       "vps_post-install-scripts_update",
       "vps_ptr_create",
       "vps_ptr_delete",
-      "vps_public-keys_attach",
       "vps_public-keys_create",
       "vps_public-keys_delete",
       "vps_public-keys_list",
@@ -448,7 +447,6 @@
       "vps_ssh-keys_remove-virtual-machine",
       "vps_templates_get",
       "vps_templates_list",
-      "vps_virtual-machines_attached-public-keys",
       "vps_virtual-machines_get",
       "vps_virtual-machines_list",
       "vps_virtual-machines_metrics",
