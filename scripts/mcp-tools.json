@@ -1,7 +1,7 @@
 {
   "package": "@hostinger/mcp",
-  "version": "4.15.2",
-  "total": 479,
+  "version": "4.20.0",
+  "total": 480,
   "groups": {
     "agency-hosting": [
       "agency-hosting_cache_clear-website",
@@ -175,6 +175,7 @@
     ],
     "horizons": [
       "changelog_list-entries",
+      "horizons_websites_build-task",
       "horizons_websites_clone",
       "horizons_websites_create",
       "horizons_websites_edit",
