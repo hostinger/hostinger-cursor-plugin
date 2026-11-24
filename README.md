@@ -2,7 +2,7 @@
 
 Official Cursor plugin for [Hostinger](https://hostinger.com/) — deploy and manage Hostinger websites, WordPress, Agency Plan sites, domains, DNS, VPS, and subscriptions without leaving Cursor.
 
-The plugin wires the official [`@hostinger/mcp`](https://www.npmjs.com/package/@hostinger/mcp) servers into Cursor, plus a set of skills, rules, an agent, and a command so the agent can take real actions on your Hostinger account.
+The plugin wires the official [`@hostinger/mcp`](https://www.npmjs.com/package/@hostinger/mcp) server into Cursor, plus a set of skills, rules, an agent, and a command so the agent can take real actions on your Hostinger account.
 
 ---
 
@@ -34,7 +34,7 @@ Install from the marketplace rather than from the GitHub URL: an `/add-plugin ht
 
 ### Requirements
 
-Node.js 20 or newer must be on your `PATH`, since the MCP servers run via `npx`. Check with `node --version`.
+Node.js 20 or newer must be on your `PATH`, since the MCP server runs via `npx`. Check with `node --version`.
 
 ---
 
@@ -50,8 +50,8 @@ Access tokens refresh automatically, and the credentials are shared across every
 To sign in ahead of time, or to sign out:
 
 ```bash
-npx --package=@hostinger/mcp@latest hostinger-hosting-mcp --login
-npx --package=@hostinger/mcp@latest hostinger-hosting-mcp --logout
+npx --package=@hostinger/mcp@latest hostinger-api-mcp --login
+npx --package=@hostinger/mcp@latest hostinger-api-mcp --logout
 ```
 
 ### API token (optional)
@@ -73,32 +73,34 @@ Never commit a token. The plugin ships a `beforeShellExecution` hook that inspec
 
 ---
 
-## MCP servers
+## MCP server
 
-Each product area runs as its own MCP server, so you can disable areas you don't use from Cursor's MCP settings. Every server exposes the same three tools — `search`, `execute` and `multi-execute` — over its own operations.
+The plugin runs one MCP server, `hostinger` (binary `hostinger-api-mcp`), which covers every product area. It exposes three tools — `search`, `execute` and `multi-execute` — over every operation in the catalog, and a `multi-execute` batch can chain operations from different areas.
 
-| Server | Binary | Operations | Covers |
-|---|---|---:|---|
-| `hostinger-hosting` | `hostinger-hosting-mcp` | 75 | Shared and Cloud websites, Node.js builds and deployments, databases, cron, PHP, SSL, files, Git |
-| `hostinger-wordpress` | `hostinger-wordpress-mcp` | 38 | WordPress installations, plugins, themes, core, LiteSpeed cache, maintenance mode |
-| `hostinger-agency-hosting` | `hostinger-agency-hosting-mcp` | 42 | Agency Plan websites, deploys, databases, SSL, PHP, metrics |
-| `hostinger-domains` | `hostinger-domains-mcp` | 42 | Availability, registration, transfers, locks, forwarding, WHOIS |
-| `hostinger-dns` | `hostinger-dns-mcp` | 8 | Zone records, snapshots, validation |
-| `hostinger-billing` | `hostinger-billing-mcp` | 9 | Subscriptions, auto-renewal, payment methods, catalog, orders |
-| `hostinger-reach` | `hostinger-reach-mcp` | 52 | Contacts, segments, email marketing profiles |
-| `hostinger-ecommerce` | `hostinger-ecommerce-mcp` | 29 | Stores, products, sales channels, shipping |
-| `hostinger-vps` | `hostinger-vps-mcp` | 64 | Virtual machines, firewalls, snapshots, backups, SSH keys, metrics |
-| `hostinger-mail` | `hostinger-mail-mcp` | 38 | Email orders, mailboxes, aliases, forwarders, catch-alls, autoreplies, mail logs, webhooks, Mail API tokens |
+| Operation prefix | Covers |
+|---|---|
+| `hosting_` | Shared and Cloud websites, Node.js builds and deployments, databases, cron, PHP, SSL, files, Git |
+| `wordpress_` | WordPress installations, plugins, themes, core, LiteSpeed cache, maintenance mode |
+| `agency-hosting_` | Agency Plan websites, deploys, databases, SSL, PHP, metrics |
+| `domains_` | Availability, registration, transfers, locks, forwarding, WHOIS |
+| `dns_` | Zone records, snapshots, validation |
+| `billing_` | Subscriptions, auto-renewal, payment methods, catalog, orders |
+| `reach_` | Contacts, segments, email marketing profiles |
+| `ecommerce_` | Stores, products, sales channels, shipping |
+| `vps_` | Virtual machines, firewalls, snapshots, backups, SSH keys, metrics |
+| `mail_` | Email orders, mailboxes, aliases, forwarders, catch-alls, autoreplies, mail logs, webhooks, Mail API tokens |
+| `horizons_` | Hostinger Horizons websites: create, edit, build, publish |
+| `gpu_` | GPU instances, exposed services, metrics |
 
-The mail server sets up email. To read or send messages, create a token with `mail_api-tokens_create` and use it with the [Hostinger Mail API](https://api.mail.hostinger.com/).
+One server means one `npx` install. Earlier versions started a server per product area at the same time, and those parallel installs into the same npx cache could leave it broken until the cache folder was deleted by hand.
 
-`@hostinger/mcp` also publishes `hostinger-horizons-mcp`, which the plugin doesn't wire up.
+The `mail_` operations set up email. To read or send messages, create a token with `mail_api-tokens_create` and use it with the [Hostinger Mail API](https://api.mail.hostinger.com/).
 
-Operation names follow the API — `hosting_websites_list`, `dns_records_list`, `billing_subscriptions_list` — and the prefix tells you which server owns the operation. For the full catalog, see [`scripts/mcp-tools.json`](scripts/mcp-tools.json) or [hostinger/api-mcp-server](https://github.com/hostinger/api-mcp-server).
+Operation names follow the API — `hosting_websites_list`, `dns_records_list`, `billing_subscriptions_list` — and the prefix tells you which product area the operation belongs to. For the full catalog, see [`scripts/mcp-tools.json`](scripts/mcp-tools.json) or [hostinger/api-mcp-server](https://github.com/hostinger/api-mcp-server).
 
 ### Already using the VS Code extension?
 
-The extension writes these same servers into `~/.cursor/mcp.json` for whichever IDE it detects. If you run both the extension and this plugin in Cursor, you'll get two copies of every server. Pick one: keep the plugin for Cursor, or disconnect the extension from Cursor's config.
+The extension writes its own Hostinger servers into `~/.cursor/mcp.json` for whichever IDE it detects. If you run both the extension and this plugin in Cursor, you'll get two copies of every Hostinger tool. Pick one: keep the plugin for Cursor, or disconnect the extension from Cursor's config.
 
 ---
 
@@ -131,7 +133,7 @@ The skills come from [hostinger/api-mcp-server](https://github.com/hostinger/api
 
 ## Rules
 
-- [`prefer-mcp-tools`](rules/prefer-mcp-tools.mdc) — use the MCP servers instead of `curl` / `ssh` / one-off scripts, how `search` / `execute` / `multi-execute` work, and which server owns what. Always on.
+- [`prefer-mcp-tools`](rules/prefer-mcp-tools.mdc) — use the MCP servers instead of `curl` / `ssh` / one-off scripts, how `search` / `execute` / `multi-execute` work, and which operation prefix covers what. Always on.
 - [`confirm-destructive-actions`](rules/confirm-destructive-actions.mdc) — require explicit confirmation before any mutating operation. Always on.
 
 ## Agents
