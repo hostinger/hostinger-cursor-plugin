@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.3.11] - 2026-11-25
+
+### Changed
+
+- Synced with `@hostinger/mcp` 4.21.0: hostinger-headless
+
 ## [0.3.10] - 2026-11-24
 
 ### Changed
