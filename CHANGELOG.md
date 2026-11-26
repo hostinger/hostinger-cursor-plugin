@@ -1,11 +1,23 @@
 # Changelog
 
-## [0.4.0] - 2026-11-24
+## [0.4.0] - 2026-11-26
 
 ### Changed
 
 - Runs one MCP server, `hostinger` (`hostinger-api-mcp`), instead of ten per-product servers. Starting ten `npx` installs at once into the same npx cache could leave the cache broken, after which no Hostinger server started until the user deleted the cache folder; with npm 10 this happened on first install and again after each `@hostinger/mcp` release. The combined server has every operation the per-product servers had, plus the Horizons and GPU operations, and a `multi-execute` batch can now chain operations from different product areas.
 - `/hostinger-status` runs its reads as separate `execute` calls, so one unavailable section no longer hides the rest.
+
+## [0.3.12] - 2026-11-26
+
+### Changed
+
+- Synced with `@hostinger/mcp` 4.23.1: hostinger-headless, make-website-agent-ready, operation catalog
+
+## [0.3.11] - 2026-11-25
+
+### Changed
+
+- Synced with `@hostinger/mcp` 4.21.0: hostinger-headless
 
 ## [0.3.10] - 2026-11-24
 
