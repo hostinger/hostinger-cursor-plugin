@@ -144,11 +144,12 @@ const manifest = JSON.parse(
   readFileSync(path.join(repoRoot, ".cursor-plugin", "plugin.json"), "utf8"),
 );
 const binaryProblems = [];
+const COMBINED_BINARY = "hostinger-api-mcp";
 
 for (const [key, server] of Object.entries(mcpConfig.mcpServers ?? {})) {
   const binary = (server.args ?? []).at(-1);
   const group = String(binary).replace(/^hostinger-/, "").replace(/-mcp$/, "");
-  if (!Object.hasOwn(catalog.groups, group)) {
+  if (binary !== COMBINED_BINARY && !Object.hasOwn(catalog.groups, group)) {
     binaryProblems.push(`${key}: "${binary}" does not map to a tool group in the catalog`);
   }
 

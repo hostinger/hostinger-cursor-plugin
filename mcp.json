@@ -1,54 +1,9 @@
 {
   "mcpServers": {
-    "hostinger-hosting": {
+    "hostinger": {
       "command": "npx",
-      "args": ["--yes", "--package=@hostinger/mcp@latest", "hostinger-hosting-mcp"],
-      "env": { "USER_AGENT": "plugin;cursor;0.3.12" }
-    },
-    "hostinger-wordpress": {
-      "command": "npx",
-      "args": ["--yes", "--package=@hostinger/mcp@latest", "hostinger-wordpress-mcp"],
-      "env": { "USER_AGENT": "plugin;cursor;0.3.12" }
-    },
-    "hostinger-agency-hosting": {
-      "command": "npx",
-      "args": ["--yes", "--package=@hostinger/mcp@latest", "hostinger-agency-hosting-mcp"],
-      "env": { "USER_AGENT": "plugin;cursor;0.3.12" }
-    },
-    "hostinger-domains": {
-      "command": "npx",
-      "args": ["--yes", "--package=@hostinger/mcp@latest", "hostinger-domains-mcp"],
-      "env": { "USER_AGENT": "plugin;cursor;0.3.12" }
-    },
-    "hostinger-dns": {
-      "command": "npx",
-      "args": ["--yes", "--package=@hostinger/mcp@latest", "hostinger-dns-mcp"],
-      "env": { "USER_AGENT": "plugin;cursor;0.3.12" }
-    },
-    "hostinger-billing": {
-      "command": "npx",
-      "args": ["--yes", "--package=@hostinger/mcp@latest", "hostinger-billing-mcp"],
-      "env": { "USER_AGENT": "plugin;cursor;0.3.12" }
-    },
-    "hostinger-reach": {
-      "command": "npx",
-      "args": ["--yes", "--package=@hostinger/mcp@latest", "hostinger-reach-mcp"],
-      "env": { "USER_AGENT": "plugin;cursor;0.3.12" }
-    },
-    "hostinger-ecommerce": {
-      "command": "npx",
-      "args": ["--yes", "--package=@hostinger/mcp@latest", "hostinger-ecommerce-mcp"],
-      "env": { "USER_AGENT": "plugin;cursor;0.3.12" }
-    },
-    "hostinger-vps": {
-      "command": "npx",
-      "args": ["--yes", "--package=@hostinger/mcp@latest", "hostinger-vps-mcp"],
-      "env": { "USER_AGENT": "plugin;cursor;0.3.12" }
-    },
-    "hostinger-mail": {
-      "command": "npx",
-      "args": ["--yes", "--package=@hostinger/mcp@latest", "hostinger-mail-mcp"],
-      "env": { "USER_AGENT": "plugin;cursor;0.3.12" }
+      "args": ["--yes", "--package=@hostinger/mcp@latest", "hostinger-api-mcp"],
+      "env": { "USER_AGENT": "plugin;cursor;0.4.0" }
     }
   }
 }
