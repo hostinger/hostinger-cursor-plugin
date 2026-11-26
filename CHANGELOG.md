@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.3.12] - 2026-11-26
+
+### Changed
+
+- Synced with `@hostinger/mcp` 4.23.1: hostinger-headless, make-website-agent-ready, operation catalog
+
 ## [0.3.11] - 2026-11-25
 
 ### Changed
