@@ -3,7 +3,7 @@
     "hostinger": {
       "command": "npx",
       "args": ["--yes", "--package=@hostinger/mcp@latest", "hostinger-api-mcp"],
-      "env": { "USER_AGENT": "plugin;cursor;0.4.0" }
+      "env": { "USER_AGENT": "plugin;cursor;0.4.1" }
     }
   }
 }
